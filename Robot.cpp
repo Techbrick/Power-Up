@@ -1,4 +1,5 @@
-#include "Robot.h"
+#include "../../Yeet/src/Robot.h"
+
 #include "WPILib.h"
 
 Robot::Robot() :
@@ -9,19 +10,19 @@ Robot::Robot() :
 		robotDrive(frontLeftMotor, frontRightMotor),
 		driveStick(Constants::driveStickChannel),
 		operatorStick(Constants::operatorStickChannel),
-		gyro(SPI::Port::kMXP, 200),
 		compressor(),
 		pdp()
 {
+	gyro = new AHRS(SPI::Port::kMXP);
 	robotDrive.SetExpiration(0.1);
-	gyro.ZeroYaw();
-	rearLeftMotor.Set(3.0,Constants::frontLeftDriveChannel);
-	rearRightMotor.Set(3.0,Constants::frontRightDriveChannel);
+	gyro->ZeroYaw();
+	rearLeftMotor.Set(ControlMode::Follower,Constants::frontLeftDriveChannel);
+	rearRightMotor.Set(ControlMode::Follower,Constants::frontRightDriveChannel);
 	//robotDrive.SetInvertedMotor(RobotDrive::kFrontLeftMotor, false);
-	rearLeftMotor.ClearStickyFaults(); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
-	rearRightMotor.ClearStickyFaults(); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
-	frontLeftMotor.ClearStickyFaults(); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
-	frontRightMotor.ClearStickyFaults(); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
+	rearLeftMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
+	rearRightMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
+	frontLeftMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
+	frontRightMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
 }
 
 void Robot::RobotInit()

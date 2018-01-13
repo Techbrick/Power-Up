@@ -1,10 +1,10 @@
 #include "WPILib.h"
-#include "Constants.h"
 #include "AHRS.h"
-#include "TalonSRX.h"
+#include "ctre/Phoenix.h"
 #include <math.h>
 #include <thread>
 #include <fstream>
+#include "../../Yeet/src/Constants.h"
 
 #define PI 3.14159265
 
@@ -20,7 +20,7 @@ class Robot : public SampleRobot {
 	frc::RobotDrive robotDrive;
 	frc::Joystick driveStick;
 	frc::Joystick operatorStick;
-	AHRS gyro;
+	AHRS *gyro;
 	Compressor compressor;
 	PowerDistributionPanel pdp;
 
