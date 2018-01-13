@@ -1,28 +1,17 @@
-#include "../../Yeet/src/Robot.h"
+#include "Robot.h"
 
 #include "WPILib.h"
 
 Robot::Robot() :
-		frontLeftMotor(Constants::frontLeftDriveChannel),
-		rearLeftMotor(Constants::rearLeftDriveChannel),
-		frontRightMotor(Constants::frontRightDriveChannel),
-		rearRightMotor(Constants::rearRightDriveChannel),
-		robotDrive(frontLeftMotor, frontRightMotor),
+		robotDrive(Constants::frontLeftDriveChannel,Constants::frontRightDriveChannel,Constants::rearLeftDriveChannel,Constants::rearRightDriveChannel),
 		driveStick(Constants::driveStickChannel),
 		operatorStick(Constants::operatorStickChannel),
 		compressor(),
-		pdp()
+		pdp(),
+		lift(Constants::liftChannel)
 {
 	gyro = new AHRS(SPI::Port::kMXP);
-	robotDrive.SetExpiration(0.1);
 	gyro->ZeroYaw();
-	rearLeftMotor.Set(ControlMode::Follower,Constants::frontLeftDriveChannel);
-	rearRightMotor.Set(ControlMode::Follower,Constants::frontRightDriveChannel);
-	//robotDrive.SetInvertedMotor(RobotDrive::kFrontLeftMotor, false);
-	rearLeftMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
-	rearRightMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
-	frontLeftMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
-	frontRightMotor.ClearStickyFaults(0); //talons browned out and got a low battery fault so they were compensating - this should even out the power and improve drive (especially strafing)
 }
 
 void Robot::RobotInit()
@@ -32,25 +21,38 @@ void Robot::RobotInit()
 void Robot::OperatorControl()
 {
 
-	robotDrive.SetSafetyEnabled(false);
-	gyro.Reset();
-	gyro.ResetDisplacement();
+	gyro->Reset();
+	SmartDashboard::PutBoolean("in op ctrl", true);
 
 	while(IsOperatorControl() && IsEnabled())
 	{
 
-		robotDrive.ArcadeDrive(driveStick.GetRawAxis(2),-1*driveStick.GetRawAxis(1));
+		robotDrive.TankDrive(driveStick.GetRawAxis(Constants::tankDriveLeftAxis), driveStick.GetRawAxis(Constants::tankDriveRightAxis));
 
 		frc::Wait(0.005);
 
-	}
+		SmartDashboard::PutNumber("drive axis 1", driveStick.GetRawAxis(Constants::tankDriveLeftAxis));
+		SmartDashboard::PutNumber("drive axis 5", driveStick.GetRawAxis(Constants::tankDriveRightAxis));
+		SmartDashboard::PutNumber("gyro", gyro->GetYaw());
 
-	robotDrive.SetSafetyEnabled(true);
+		if (driveStick.GetRawButton(Constants::liftUpButton))
+			lift.Lift(driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5);
+		else if (driveStick.GetRawButton(Constants::liftDownButton))
+			lift.Lift(-1*(driveStick.GetRawAxis(Constants::liftDownAxis)/2.0 + 0.5));
+
+	}
 
 }
 
 void Robot::Autonomous()
 {
+
+	robotDrive.TankDrive(0.5,0.5);
+
+	frc::Wait(0.3);
+
+	robotDrive.TankDrive(0.0,0.0);
+
 }
 
 START_ROBOT_CLASS(Robot)

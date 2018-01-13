@@ -4,7 +4,9 @@
 #include <math.h>
 #include <thread>
 #include <fstream>
-#include "../../Yeet/src/Constants.h"
+#include "Constants.h"
+#include "DriveTrain.h"
+#include "SuperLifter.h"
 
 #define PI 3.14159265
 
@@ -12,17 +14,14 @@
 #define SRC_ROBOT_H_
 
 class Robot : public SampleRobot {
-
-	TalonSRX frontLeftMotor;
-	TalonSRX rearLeftMotor;
-	TalonSRX frontRightMotor;
-	TalonSRX rearRightMotor;
-	frc::RobotDrive robotDrive;
+private:
+	DriveTrain robotDrive;
 	frc::Joystick driveStick;
 	frc::Joystick operatorStick;
 	AHRS *gyro;
 	Compressor compressor;
 	PowerDistributionPanel pdp;
+	SuperLifter lift;
 
 public:
 	Robot();
