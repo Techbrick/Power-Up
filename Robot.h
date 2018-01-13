@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "DriveTrain.h"
 #include "SuperLifter.h"
+#include "PIDLoop.h"
 
 #define PI 3.14159265
 
@@ -21,7 +22,8 @@ private:
 	AHRS *gyro;
 	Compressor compressor;
 	PowerDistributionPanel pdp;
-	SuperLifter lift;
+//	SuperLifter lift;
+	PIDLoop pid;
 
 public:
 	Robot();

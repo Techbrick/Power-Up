@@ -8,7 +8,8 @@ Robot::Robot() :
 		operatorStick(Constants::operatorStickChannel),
 		compressor(),
 		pdp(),
-		lift(Constants::liftChannel)
+//		lift(Constants::liftChannel),
+		pid()
 {
 	gyro = new AHRS(SPI::Port::kMXP);
 	gyro->ZeroYaw();
@@ -24,10 +25,14 @@ void Robot::OperatorControl()
 	gyro->Reset();
 	SmartDashboard::PutBoolean("in op ctrl", true);
 
+	TalonSRX *lift = new TalonSRX(Constants::liftChannel);
+	float liftVal = 0;
+
+
 	while(IsOperatorControl() && IsEnabled())
 	{
 
-		robotDrive.TankDrive(driveStick.GetRawAxis(Constants::tankDriveLeftAxis), driveStick.GetRawAxis(Constants::tankDriveRightAxis));
+		robotDrive.TankDrive(0.5*driveStick.GetRawAxis(Constants::tankDriveLeftAxis), 0.5*driveStick.GetRawAxis(Constants::tankDriveRightAxis));
 
 		frc::Wait(0.005);
 
@@ -36,10 +41,14 @@ void Robot::OperatorControl()
 		SmartDashboard::PutNumber("gyro", gyro->GetYaw());
 
 		if (driveStick.GetRawButton(Constants::liftUpButton))
-			lift.Lift(driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5);
+//			lift.Lift(driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5);
+			liftVal = driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5;
 		else if (driveStick.GetRawButton(Constants::liftDownButton))
-			lift.Lift(-1*(driveStick.GetRawAxis(Constants::liftDownAxis)/2.0 + 0.5));
+//			lift.Lift(-1*(driveStick.GetRawAxis(Constants::liftDownAxis)/2.0 + 0.5));
+			liftVal = -1 * driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5;
 
+
+		lift->Set(ControlMode::PercentOutput, liftVal);
 	}
 
 }

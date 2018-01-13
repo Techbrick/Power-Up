@@ -19,11 +19,14 @@ namespace Constants
 	static constexpr int tankDriveLeftAxis = 1;
 	static constexpr int tankDriveRightAxis = 5;
 
-	static constexpr bool liftChannel = 99;
+	static constexpr bool liftChannel = 10;
 	static constexpr int liftUpButton = 7;
 	static constexpr int liftUpAxis = 4;
 	static constexpr int liftDownButton = 6;
 	static constexpr int liftDownAxis = 3;
+
+	static constexpr float minForwardPower = 0.0; //TODO: figure this out boyz
+	static constexpr float angleErrorLimit = 0.0; //TODO: change this boyz
 
 }
 
