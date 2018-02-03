@@ -11,6 +11,9 @@ namespace Constants
 	static constexpr int driveStickChannel = 0;
 	static constexpr int operatorStickChannel = 1;
 
+	static constexpr bool gRightInverted = false;
+	static constexpr bool gLeftInverted = false;
+
 	static constexpr bool frontLeftInverted = true;
 	static constexpr bool rearLeftInverted = false;
 	static constexpr bool frontRightInverted = false;
