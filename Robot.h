@@ -29,6 +29,7 @@ private:
 	SuperClimber climber;
 	Aimer aim;
 	void runPathFinder(Waypoint* points, int POINT_LENGTH);
+	void colorSend(uint8_t numToSend);
 
 public:
 	Robot();
