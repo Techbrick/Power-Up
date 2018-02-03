@@ -12,6 +12,7 @@ Robot::Robot() :
 		pdp(),
 		lift(Constants::liftChannel),
 		climber(Constants::climbChannel),
+		grip(Constants::gripperLeftMotorChannel,Constants::gripperRightMotorChannel,Constants::gripperLeftPneum1Channel,Constants::gripperLeftPneum2Channel,Constants::gripperRightPneum1Channel,Constants::gripperRightPneum2Channel),
 		aim()
 {
 	gyro.ZeroYaw();
@@ -197,7 +198,7 @@ void setPoints(Waypoint* points,float x, float y, float degree, int point)
 void Robot::runPathFinder(Waypoint* points, int POINT_LENGTH)
 {
 
-	gyro.Reset();
+	gyro.ZeroYaw();
 
 	for (int i = 0; i < POINT_LENGTH; ++i)
 	{
@@ -317,7 +318,7 @@ void Robot::Autonomous()
 	points[2] = {1.5,-1.3,d2r(-20)};
 	points[3] = {3.3,-1.5,d2r(0)};
 
-	runPathFinder(points, POINT_LENGTH);
+//	runPathFinder(points, POINT_LENGTH);
 
 	std::string gameData;
 	int startingPos = 0; // 0 == left; 1 == middle; 2 == right;
@@ -328,17 +329,17 @@ void Robot::Autonomous()
 	SmartDashboard::GetNumber("Position (0L - 2R)", startingPos);
 	SmartDashboard::GetNumber("Target (0Sw 1Sc 2eSw)", target);
 
-//	if(gameData[0] == 'L' && startingPos == 0)
-//	{
-//		delete points;
-//		points = new Waypoint[2];
-////		setPoints(points,0,0,0,0);
-////		setPoints(points,166.6,40,90,1);
-//		points[0] = {0,0,0};
-//		points[1] = {166.6*.0254,-40*.0254,d2r(-90)};
-//		runPathFinder(points,2);
-//		delete points;
-//	}
+	if(gameData[0] == 'L' && startingPos == 0)
+	{
+		delete points;
+		points = new Waypoint[2];
+//		setPoints(points,0,0,0,0);
+//		setPoints(points,166.6,40,90,1);
+		points[0] = {0,0,0};
+		points[1] = {166.6*.0254,-40*.0254,d2r(-90)};
+		runPathFinder(points,2);
+		delete points;
+	}
 
 
 	//New Auto Code

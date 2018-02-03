@@ -11,6 +11,13 @@ namespace Constants
 	static constexpr int driveStickChannel = 0;
 	static constexpr int operatorStickChannel = 1;
 
+	static constexpr int gripperLeftMotorChannel = 99;
+	static constexpr int gripperRightMotorChannel = 99;
+	static constexpr int gripperLeftPneum1Channel = 99;
+	static constexpr int gripperLeftPneum2Channel = 99;
+	static constexpr int gripperRightPneum1Channel = 99;
+	static constexpr int gripperRightPneum2Channel = 99;
+
 	static constexpr bool gRightInverted = false;
 	static constexpr bool gLeftInverted = false;
 

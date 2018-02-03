@@ -8,6 +8,7 @@
 #include "DriveTrain.h"
 #include "SuperLifter.h"
 #include "SuperClimber.h"
+#include "Gripper.h"
 #include "PIDLoop.h"
 #include "Aimer.h"
 #include <pathfinder.h>
@@ -27,6 +28,7 @@ private:
 	PowerDistributionPanel pdp;
 	SuperLifter lift;
 	SuperClimber climber;
+	Gripper grip;
 	Aimer aim;
 	void runPathFinder(Waypoint* points, int POINT_LENGTH);
 
