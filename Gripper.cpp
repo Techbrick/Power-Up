@@ -25,10 +25,13 @@ void Gripper::setMotors(float power)
 	}
 }
 
-void Gripper::setPneumatics(bool open)
+void Gripper::setHolder(bool open)
 {
-	lp.set(open);
-	rp.set(open);
+	holder.set(open);
+}
+void Gripper::setDropper(bool open)
+{
+	dropper.set(open);
 }
 
 
