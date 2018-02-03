@@ -362,10 +362,10 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[5];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-79,201,90,1);
-//		setPoints(points,-19,233,90,2);
-//		setPoints(points,96,241,90,3);
-//		setPoints(points,100,319,270,4);
+//		setPoints(points,7,35,90,1);
+//		setPoints(points,67,67,90,2);
+//		setPoints(points,182,75,90,3);
+//		setPoints(points,186,153,270,4);
 //		runPathFinder(points, 5);
 //	}
 //
@@ -383,13 +383,13 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-79,201,90,3);
+//		setPoints(points,7,35,90,3);
 //		runPathFinder(points, 2);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-94,321,90,4);
+//		setPoints(points,-15,120,90,4);
 //		runPathFinder(points, 2);
 //	}
 //
@@ -406,19 +406,19 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,30);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,84,198,270,2);
+//		setPoints(points,-2,34,270,2);
 //		runPathFinder(points, 2);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,30);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-95,238,270,3);
+//		setPoints(points,-179,40,270,3);
 //		runPathFinder(points, 2);
 //		delete points;
 //		robotDrive.DriveStraightDistance(0.75,30);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-94,321,90,4);
+//		setPoints(points,-1,83,90,4);
 //		runPathFinder(points, 2);
 //	}
 //
@@ -435,18 +435,18 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,30);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,84,198,270,2);
+//		setPoints(points,-2,34,270,2);
 //		runPathFinder(points, 2);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,30);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,91,321,270,3);
+//		setPoints(points,7,123,270,3);
 //		runPathFinder(points, 2);
 //	}
 //
 //	//Right to right scale then left switch
-//	if(gameData[0] == 'L' && gameData[1] =='R' && startingPos == 2)
+//	if(gameData	[0] == 'L' && gameData[1] =='R' && startingPos == 2)
 //	{
 //		delete points;
 //		points = new Waypoint[3];
@@ -458,15 +458,15 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,30);
 //		points = new Waypoint[4];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-24,232,270,2);
-//		setPoints(points,-130,227,270,3);
-//		setPoints(points,-182,209,180,4);
+//		setPoints(points,-14,-87,270,2);
+//		setPoints(points,-120,-92,270,3);
+//		setPoints(points,-172,-110,180,4);
 //		runPathFinder(points, 4);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,20);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-189,165,90,5);
+//		setPoints(points,-7,-44,90,5);
 //		runPathFinder(points, 2);
 //	}
 //
@@ -483,15 +483,15 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,30);
 //		points = new Waypoint[4];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-27,200,270,2);
-//		setPoints(points,-62,229,270,3);
-//		setPoints(points,-176,240,270,4);
+//		setPoints(points,-3,38,270,2);
+//		setPoints(points,-38,67,270,3);
+//		setPoints(points,-152,78,270,4);
 //		runPathFinder(points, 4);
 //		delete points;
 //		robotDrive.DriveStraightDistance(0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-206,318,90,5);
+//		setPoints(points,-30,78,90,5);
 //		runPathFinder(points, 2);
 //	}
 //
@@ -510,13 +510,13 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-192,199,90,3);
+//		setPoints(points,16,-115,90,3);
 //		runPathFinder(points, 2);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-192,167,90,4);
+//		setPoints(points,0,-32,90,4);
 //		runPathFinder(points, 2);
 //	}
 //
@@ -532,13 +532,13 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-32,163,270,1);
+//		setPoints(points,-16,20,270,1);
 //		runPathFinder(points, 2);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,-22,316,270,2);
+//		setPoints(points,10,153,270,2);
 //		runPathFinder(points, 2);
 //	}
 //
@@ -554,14 +554,14 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,45,210,180,1);
+//		setPoints(points,24,-108,180,1);
 //		runPathFinder(points, 2);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,30);
 //		points = new Waypoint[3];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,216,232,90,2);
-//		setPoints(points,205,163,270,3);
+//		setPoints(points,171,22,90,2);
+//		setPoints(points,160,-47,270,3);
 //		runPathFinder(points, 3);
 //	}
 //
@@ -578,11 +578,11 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[6];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,20,198,90,3);
-//		setPoints(points,78,230,90,4);
-//		setPoints(points,104,238,90,5);
-//		setPoints(points,228,238,90,6);
-//		setPoints(points,216,318,270,7);
+//		setPoints(points,-17,33,90,3);
+//		setPoints(points,41,65,90,4);
+//		setPoints(points,67,73,90,5);
+//		setPoints(points,191,733,90,6);
+//		setPoints(points,179,153,270,7);
 //		runPathFinder(points, 6);
 //	}
 //
@@ -601,14 +601,14 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[3];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,220,250,180,4);
-//		setPoints(points,200,201,270,5);
+//		setPoints(points,4,-69,180,4);
+//		setPoints(points,-16,-118,270,5);
 //		runPathFinder(points, 3);
 //		delete points;
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[2];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,201,166,270,6);
+//		setPoints(points,1,-35,270,6);
 //		runPathFinder(points, 2);
 //	}
 //
@@ -624,8 +624,8 @@ void Robot::Autonomous()
 //		robotDrive.DriveStraightDistance(-0.75,50);
 //		points = new Waypoint[3];
 //		setPoints(points,0,0,0,0);
-//		setPoints(points,36,198,90,1);
-//		setPoints(points,22,320,90,2);
+//		setPoints(points,1,37,90,1);
+//		setPoints(points,-13,159,90,2);
 //		runPathFinder(points, 3);
 //	}
 }
