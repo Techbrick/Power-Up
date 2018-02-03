@@ -7,23 +7,28 @@
 #include "Constants.h"
 #include "DriveTrain.h"
 #include "SuperLifter.h"
+#include "SuperClimber.h"
 #include "PIDLoop.h"
-
-#define PI 3.14159265
+#include "Aimer.h"
+#include <pathfinder.h>
+#include <iostream>
 
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
 
 class Robot : public SampleRobot {
 private:
+	AHRS gyro;
+	PIDLoop pid;
 	DriveTrain robotDrive;
 	frc::Joystick driveStick;
 	frc::Joystick operatorStick;
-	AHRS *gyro;
 	Compressor compressor;
 	PowerDistributionPanel pdp;
-//	SuperLifter lift;
-	PIDLoop pid;
+	SuperLifter lift;
+	SuperClimber climber;
+	Aimer aim;
+	void runPathFinder(Waypoint* points, int POINT_LENGTH);
 
 public:
 	Robot();

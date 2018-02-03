@@ -24,6 +24,8 @@ PIDLoop::PIDLoop() //:
   last_angle_error = 0;
   angleMaxError = 2;
   iteration_time = .005;
+  minTurnSpeed = .3; //TODO: change when actual speed found
+  maxTurnSpeed = .8; //TODO: change when actual speed found
 }
 
 void PIDLoop::resetPIDAngle() { //reset angle pid values
@@ -36,6 +38,14 @@ void PIDLoop::setAngle(float pAngleInput, float iAngleInput, float dAngleInput) 
 	k_p_Angle = pAngleInput;
 	k_i_Angle = iAngleInput;
 	k_d_Angle = dAngleInput;
+}
+
+void PIDLoop::setMinTurnSpeed(float minTurnSpeed_) {
+	minTurnSpeed = minTurnSpeed_;
+}
+
+void PIDLoop::setMaxTurnSpeed(float maxTurnSpeed_) {
+	maxTurnSpeed = maxTurnSpeed_;
 }
 
 float PIDLoop::PIDAngle(float angleOffset, float desiredAngle) {
@@ -57,17 +67,22 @@ float PIDLoop::PIDAngle(float angleOffset, float desiredAngle) {
 
 
 
-  angleOutput = fabs(angleOutput) < .14 ? copysign(.14, angleOutput) : angleOutput; //if angleOutput is below min, set to min
-  angleOutput = fabs(angleOutput) > .9 ? copysign(.9, angleOutput) : angleOutput; //if angleOutput is above max, set to max
+  angleOutput = fabs(angleOutput) < minTurnSpeed ? copysign(minTurnSpeed, angleOutput) : angleOutput; //if angleOutput is below min, set to min
+  angleOutput = fabs(angleOutput) > maxTurnSpeed ? copysign(maxTurnSpeed, angleOutput) : angleOutput; //if angleOutput is above max, set to max
   //angleOutput = angle_error < 0 ? angleOutput : -angleOutput;
   if (fabs(angle_error) < Constants::angleErrorLimit) { //if done moving
 	  i_Angle = 0;
 	  angleOutput = 0;
   }
-  angleOutput = -angleOutput;
+  //angleOutput = -angleOutput;
   logger << p_Angle << " " << angle_error << " " << angleOutput << "\n"; //output to log file
   //frc::Wait(iteration_time);
   logger.close();
+
+  SmartDashboard::PutNumber("angle_error", angle_error);
+  SmartDashboard::PutNumber("angleOutput", angleOutput);
+  SmartDashboard::PutNumber("angleOffset", angleOffset);
+  SmartDashboard::PutNumber("Desired Angle", desiredAngle);
 
   /*SmartDashboard::PutNumber("Accumulated i", i_Angle);
   SmartDashboard::PutNumber("Desired Angle", desiredAngle);
