@@ -10,11 +10,12 @@
 class Gripper {
 public:
 	Gripper();
-	void setPneumatics(bool open);
+	void setHolder(bool open);
+	void setDropper(bool open);
 	void setMotors(float power);
 private:
 	TalonSRX lt, rt;
-	Pneumatics lp, rp;
+	Pneumatics holder, dropper;
 };
 
 #endif
