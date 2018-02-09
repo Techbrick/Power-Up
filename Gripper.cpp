@@ -1,10 +1,6 @@
 #include "Gripper.h"
 
-Gripper::Gripper(int lm, int rm, int lp1, int lp2, int rp1, int rp2):
-	lt(lm),
-	rt(rm),
-	lp(lp1,lp2),
-	rp(rp1,rp2)
+Gripper::Gripper()
 {
 	lt.SetInverted(Constants::gLeftInverted);
 	rt.SetInverted(Constants::gRightInverted);
@@ -29,8 +25,12 @@ void Gripper::setMotors(float power)
 	}
 }
 
-void Gripper::setPneumatics(bool open)
+void Gripper::setHolder(bool open)
 {
-	lp.set(open);
-	rp.set(open);
+	holder.set(open);
+}
+
+void Gripper::setDropper(bool open)
+{
+	dropper.set(open);
 }

@@ -31,6 +31,9 @@ DriveTrain::DriveTrain(int lf, int rf, int lr, int rrr, AHRS& g, PIDLoop p):
 	rl.SetNeutralMode(NeutralMode::Brake);
 	rr.SetNeutralMode(NeutralMode::Brake);
 
+	rl.Follow(fl);
+	rr.Follow(fr);
+
 	fl.ConfigSelectedFeedbackSensor(motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 	fr.ConfigSelectedFeedbackSensor(motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 
@@ -46,12 +49,10 @@ void DriveTrain::TankDrive(float left, float right)
 	if (fabs(left) < .05)
 	{
 		fl.Set(ControlMode::PercentOutput, 0.0);
-		rl.Set(ControlMode::PercentOutput, 0.0);
 	}
 	if (fabs(right) < .05)
 	{
 		fr.Set(ControlMode::PercentOutput, 0.0);
-		rr.Set(ControlMode::PercentOutput, 0.0);
 	}
 	if (left > 1)
 	{
@@ -66,8 +67,6 @@ void DriveTrain::TankDrive(float left, float right)
 
 	fl.Set(ControlMode::PercentOutput, left);
 	fr.Set(ControlMode::PercentOutput, right);
-	rl.Set(ControlMode::PercentOutput, left);
-	rr.Set(ControlMode::PercentOutput, right);
 }
 
 
@@ -92,9 +91,7 @@ void DriveTrain::ArcadeDrive(float fwd, float turn)
 	SmartDashboard::PutNumber("Arcade Right" , right);
 
 	fl.Set(ControlMode::PercentOutput,left);
-	rl.Set(ControlMode::PercentOutput,left);
 	fr.Set(ControlMode::PercentOutput,right);
-	rr.Set(ControlMode::PercentOutput,right);
 }
 
 void DriveTrain::DriveStraight(float left, float right)

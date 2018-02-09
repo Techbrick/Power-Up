@@ -1,7 +1,5 @@
 #include "Robot.h"
 
-#include "WPILib.h"
-
 Robot::Robot() :
 		gyro(SPI::Port::kMXP),
 		pid(),
@@ -10,12 +8,22 @@ Robot::Robot() :
 		operatorStick(Constants::operatorStickChannel),
 		compressor(),
 		pdp(),
-		lift(Constants::liftChannel),
+		lift(Constants::liftChannel,Constants::helpChannel),
 		climber(Constants::climbChannel),
 		grip(Constants::gripperLeftMotorChannel,Constants::gripperRightMotorChannel,Constants::gripperLeftPneum1Channel,Constants::gripperLeftPneum2Channel,Constants::gripperRightPneum1Channel,Constants::gripperRightPneum2Channel),
-		aim()
+		aim(),
+		i2c(I2C::kOnboard,Constants::ledAddress)
 {
 	gyro.ZeroYaw();
+}
+
+void Robot::colorSend(uint8_t numToSend)
+{
+	uint8_t *toSend = new uint8_t[10];
+	uint8_t *toReceive = new uint8_t[10];
+	toSend[0] = 1;
+	toReceive[0] = 0;
+	i2c.Transaction(toSend, numToSend, toReceive, 0);
 }
 
 void Robot::RobotInit()
@@ -27,6 +35,10 @@ void Robot::RobotInit()
 	SmartDashboard::PutNumber("angle min turn val", .25);
 	SmartDashboard::PutNumber("angle max turn val", .8);
 	NetworkTable::SetUpdateRate(.01);
+	if (!IsEnabled())
+	{
+		colorSend(1);
+	}
 }
 
 void Robot::OperatorControl()
@@ -45,8 +57,27 @@ void Robot::OperatorControl()
 	bool togglingDriveMode = false;
 	bool firstLoopThroughSinceButtonPressed = true;
 	float cube_angle = 0.0;
+	bool firstLifterPosition = true;
 
 	float cube_ang = 0.0;
+
+	lift.Reset();
+
+//	VictorSPX help(Constants::helpChannel);
+//	TalonSRX lift(Constants::liftChannel);
+//
+//	lift.ClearStickyFaults(0);
+//	lift.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+//	lift.SetInverted(Constants::liftInverted);
+//	help.ClearStickyFaults(0);
+//	help.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+//	help.SetInverted(Constants::helpInverted);
+//	help.Follow(lift);
+
+	if (IsEnabled())
+	{
+		colorSend(2);
+	}
 
 	while(IsOperatorControl() && IsEnabled())
 	{
@@ -137,11 +168,42 @@ void Robot::OperatorControl()
 
 
 		if (driveStick.GetRawButton(Constants::liftUpButton))
-			lift.Lift(-1 * (driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5));
+		{
+			colorSend(5);
+//			lift.Set(ControlMode::PercentOutput, -1 * (driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5));
+			lift.Lift((driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5));
+		}
 		else if (driveStick.GetRawButton(Constants::liftDownButton))
-			lift.Lift(-1*-1*(driveStick.GetRawAxis(Constants::liftDownAxis)/2.0 + 0.5));
+		{
+			colorSend(7);
+//			lift.Set(ControlMode::PercentOutput, (driveStick.GetRawAxis(Constants::liftDownAxis)/2.0 + 0.5));
+			lift.Lift(-1*(driveStick.GetRawAxis(Constants::liftDownAxis)/2.0 + 0.5));
+		}
+		else if (driveStick.GetRawButton(4))
+		{
+			if (firstLifterPosition)
+			{
+				firstLifterPosition = false;
+				lift.SetPosition(2);
+			}
+			lift.Position();
+		}
+		else if (driveStick.GetRawButton(3))
+		{
+			if (firstLifterPosition)
+			{
+				firstLifterPosition = false;
+				lift.SetPosition(-2);
+			}
+			lift.Position();
+		}
 		else
-			lift.Lift(0.0);
+		{
+//			lift.Lift(0);
+			lift.Brake();
+			firstLifterPosition = true;
+		}
+		std::cout << -1 * (driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5);
 
 
 		//////////////////////////////////////////////////////////////////////////////
@@ -202,7 +264,7 @@ void Robot::runPathFinder(Waypoint* points, int POINT_LENGTH)
 
 	for (int i = 0; i < POINT_LENGTH; ++i)
 	{
-		points[i].y *= 1.18;
+		points[i].y *= 1.135;
 	}
 
 	for (int i = 0; i < POINT_LENGTH; ++i)
@@ -257,14 +319,14 @@ void Robot::runPathFinder(Waypoint* points, int POINT_LENGTH)
 		lenc.segment = 0;
 		lenc.finished = 0;
 
-		EncoderConfig lconf = {robotDrive.GetLeftEncoder(), Constants::ticksPerRev, Constants::wheelCircumference, 0.3, 0.0, 0.0, 1.0 / Constants::actualMaxVelocity, 0.03};
+		EncoderConfig lconf = {robotDrive.GetLeftEncoder(), Constants::ticksPerRev, Constants::wheelCircumference, 0.3, 0.0, 0.0, 1.0 / Constants::actualMaxVelocity, 0.00};
 
 		EncoderFollower renc;
 		renc.last_error = 0;
 		renc.segment = 0;
 		renc.finished = 0;
 
-		EncoderConfig rconf = {robotDrive.GetRightEncoder(), Constants::ticksPerRev, Constants::wheelCircumference, 0.3, 0.0, 0.0, 1.0 / Constants::actualMaxVelocity, 0.03};
+		EncoderConfig rconf = {robotDrive.GetRightEncoder(), Constants::ticksPerRev, Constants::wheelCircumference, 0.3, 0.0, 0.0, 1.0 / Constants::actualMaxVelocity, 0.00};
 		for (int i = 0; i < length; ++i)
 		{
 			float l = pathfinder_follow_encoder(lconf, &lenc, leftTraj, length, robotDrive.GetLeftEncoder());
@@ -309,6 +371,7 @@ void Robot::runPathFinder(Waypoint* points, int POINT_LENGTH)
 
 void Robot::Autonomous()
 {
+	colorSend(8);
 	SmartDashboard::PutBoolean("In Auto", true);
 	int POINT_LENGTH = 4;
 
@@ -318,7 +381,7 @@ void Robot::Autonomous()
 	points[2] = {1.5,-1.3,d2r(-20)};
 	points[3] = {3.3,-1.5,d2r(0)};
 
-//	runPathFinder(points, POINT_LENGTH);
+	runPathFinder(points, POINT_LENGTH);
 
 	std::string gameData;
 	int startingPos = 0; // 0 == left; 1 == middle; 2 == right;
@@ -337,7 +400,7 @@ void Robot::Autonomous()
 //		setPoints(points,166.6,40,90,1);
 		points[0] = {0,0,0};
 		points[1] = {166.6*.0254,-40*.0254,d2r(-90)};
-		runPathFinder(points,2);
+//		runPathFinder(points,2);
 		delete points;
 	}
 

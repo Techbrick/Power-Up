@@ -13,6 +13,7 @@
 #include "Aimer.h"
 #include <pathfinder.h>
 #include <iostream>
+#include "I2C.h"
 
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
@@ -30,7 +31,9 @@ private:
 	SuperClimber climber;
 	Gripper grip;
 	Aimer aim;
+	I2C i2c;
 	void runPathFinder(Waypoint* points, int POINT_LENGTH);
+	void colorSend(uint8_t numToSend);
 
 public:
 	Robot();

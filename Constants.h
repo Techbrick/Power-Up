@@ -41,10 +41,15 @@ namespace Constants
 	static constexpr int climbChannel = 99;
 
 	static constexpr int liftChannel = 10;
+	static constexpr int helpChannel = 8;
+	static constexpr bool liftInverted = false;
+	static constexpr bool helpInverted = false;
 	static constexpr int liftUpButton = 8;
 	static constexpr int liftUpAxis = 4;
 	static constexpr int liftDownButton = 7;
 	static constexpr int liftDownAxis = 3;
+	static constexpr bool liftEncoderInverted = true;
+	static constexpr float lifterMaxCurrent = 20.0;
 
 	static constexpr float minForwardPower = 0.025; //TODO: figure this out boyz
 	static constexpr float angleErrorLimit = 1.0; //TODO: change this boyz
@@ -67,6 +72,8 @@ namespace Constants
 	static constexpr float maxAcceleration = 3.0;
 	static constexpr float maxJerk = 20.0;
 	static constexpr float powerPerVelocity = 2.3 * 0.5 / 3.35;
+
+	static constexpr int ledAddress = 99;
 
 }
 
