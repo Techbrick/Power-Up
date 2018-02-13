@@ -1,6 +1,10 @@
 #include "Gripper.h"
 
-Gripper::Gripper()
+Gripper::Gripper(int l, int r, int h1, int h2, int d1, int d2):
+	lt(l),
+	rt(r),
+	holder(h1,h2),
+	dropper(d1,d2)
 {
 	lt.SetInverted(Constants::gLeftInverted);
 	rt.SetInverted(Constants::gRightInverted);

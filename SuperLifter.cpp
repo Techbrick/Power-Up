@@ -14,7 +14,8 @@ SuperLifter::SuperLifter(int liftChannel, int helpChannel):
 	p(0.0001),
 	d(0.00001),
 	penc(0),
-	tgt(-1)
+	tgt(-1),
+	zero(0)
 {
 	lift.ClearStickyFaults(0);
 	help.ClearStickyFaults(0);
@@ -89,4 +90,14 @@ void SuperLifter::Position()
 void SuperLifter::SetPosition(float revs)
 {
 	penc = revs * 4096 + lift.GetSelectedSensorPosition(0);
+}
+
+int SuperLifter::GetEncoder()
+{
+	return lift.GetSelectedSensorPosition(0) - zero;
+}
+
+void SuperLifter::Zero()
+{
+	zero = lift.GetSelectedSensorPosition(0);
 }

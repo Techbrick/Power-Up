@@ -50,11 +50,15 @@ namespace Constants
 	static constexpr int liftDownAxis = 3;
 	static constexpr bool liftEncoderInverted = true;
 	static constexpr float lifterMaxCurrent = 20.0;
+	static constexpr float lifterHeightPerRev = 20.0;
+	static constexpr float lifterMaxHeight = 100.0;
 
 	static constexpr float minForwardPower = 0.025; //TODO: figure this out boyz
 	static constexpr float angleErrorLimit = 1.0; //TODO: change this boyz
 
-	static constexpr float percentDrivePower = 0.5;
+	static constexpr float highPower = 1.0;
+	static constexpr float normPower = 0.75;
+	static float percentDrivePower = 0.75;
 
 	static constexpr float encoderFactor = 1.0;
 	static constexpr bool frontLeftEncoderInverted = false;

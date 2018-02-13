@@ -9,7 +9,7 @@
 
 class Gripper {
 public:
-	Gripper();
+	Gripper(int,int,int,int,int,int);
 	void setHolder(bool open);
 	void setDropper(bool open);
 	void setMotors(float power);

@@ -18,16 +18,17 @@ class SuperLifter
 public:
 	SuperLifter(int l, int h);
 	void Lift(float pow);
-	void SetHeight(float inches);
 	void Brake();
 	void Reset();
 	void Position();
 	void SetPosition(float revs);
+	int GetEncoder();
+	void Zero();
 
 private:
 	TalonSRX lift;
 	TalonSRX help;
-	float p, d, penc, tgt;
+	float p, d, penc, tgt, zero;
 
 };
 
