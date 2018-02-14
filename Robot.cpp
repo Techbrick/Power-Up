@@ -530,7 +530,7 @@ void Robot::Autonomous()
 			points = new Waypoint[2];
 			setPoints(points,0,0,0,0);
 			setPoints(points,-179,40,270,1);
-			runPathFinder(points, 2);
+			runPathFinder(points, 2,0);
 			delete points;
 			robotDrive.DriveStraightDistance(0.75,30);
 			points = new Waypoint[2];
@@ -637,7 +637,7 @@ void Robot::Autonomous()
 			setPoints(points,0,0,0,0);
 			setPoints(points,-38,67,270,1);
 			setPoints(points,-152,78,270,2);
-			runPathFinder(points, 3);
+			runPathFinder(points, 3,0);
 			delete points;
 			robotDrive.DriveStraightDistance(0.75,50);
 			points = new Waypoint[2];
@@ -779,7 +779,7 @@ void Robot::Autonomous()
 			setPoints(points,67,73,90,2);
 			setPoints(points,191,733,90,3);
 			setPoints(points,179,153,270,4);
-			runPathFinder(points, 5);
+			runPathFinder(points, 5,0);
 		}
 
 		//Left to right scale then right switch
@@ -821,6 +821,7 @@ void Robot::Autonomous()
 		//Left to left switch then left scale
 		if(gameData[0] == 'L' && gameData[1] =='L' && startingPos == 0)
 		{
+			std::cout << "Going from the left to the left to the left\n";
 			delete points;
 			grip.setDropper(false);
 			grip.setHolder(true);
