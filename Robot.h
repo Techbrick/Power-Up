@@ -32,7 +32,7 @@ private:
 	Gripper grip;
 	Aimer aim;
 	I2C i2c;
-	void runPathFinder(Waypoint* points, int POINT_LENGTH);
+	void runPathFinder(Waypoint* points, int POINT_LENGTH, int height);
 	void colorSend(uint8_t numToSend);
 
 public:
