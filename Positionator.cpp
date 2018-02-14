@@ -6,11 +6,7 @@ int oldRightEncoder = 0;
 Positionator::Positionator() {
 
 }
-struct Position
-{
-	float xPosition;
-	float yPosition;
-};
+
 float Positionator::findPosition(float angle, int leftEncoder, int rightEncoder)
 {
 //		4096*1.65 ticks per revolution of the wheel
