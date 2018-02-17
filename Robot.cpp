@@ -9,7 +9,7 @@ Robot::Robot() :
 		compressor(),
 		pdp(),
 		lift(Constants::liftChannel,Constants::helpChannel),
-		climber(Constants::climbChannel),
+		climber(Constants::climbChannel1,Constants::climbChannel2),
 		grip(Constants::gripperLeftMotorChannel,Constants::gripperRightMotorChannel,Constants::gripperLeftPneum1Channel,Constants::gripperLeftPneum2Channel,Constants::gripperRightPneum1Channel,Constants::gripperRightPneum2Channel),
 		aim(),
 		i2c(I2C::kOnboard,Constants::ledAddress)
@@ -257,9 +257,9 @@ void Robot::OperatorControl()
 void setPoints(Waypoint* points, float x, float y, float degree, int point)
 {
 	float xR = x*0.0254;
-	float yR = y*0.0254 - 0.7112;
-	xR *= 0.25;
-	yR *= 0.25;
+	float yR = y*0.0254 - 0.889;
+	xR *= 1.0;
+	yR *= 1.0;
 	points[point] = {yR,xR,d2r(degree)};
 	//points.push_back(p);
 }
@@ -433,424 +433,523 @@ void Robot::Autonomous()
 	}
 	else
 	{
-		if(gameData[0] == 'L' && gameData[1] =='R' && startingPos == 1)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[4];
-			setPoints(points,0,0,0,0);
-			setPoints(points,0,70,270,1);
-			setPoints(points,-120,77,0,2);
-			setPoints(points,-86,166,90,3);
-			runPathFinder(points, 4,31);
-			grip.setDropper(true);
-			grip.setHolder(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,7,35,90,1);
-			runPathFinder(points,2,0);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			frc::Wait(.2);
-			delete points;
-			points = new Waypoint[4];
-			setPoints(points,0,0,0,0);
-			setPoints(points,60,32,90,1);
-			setPoints(points,175,40,90,2);
-			setPoints(points,179,118,270,3);
-			runPathFinder(points, 4,73);
-			grip.setDropper(true);
-			grip.setHolder(false);
-		}
-
-		//Middle to Left Switch then Left Scale
-		if(gameData[0] == 'L' && gameData[1] =='L' && startingPos == 1)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[4];
-			setPoints(points,0,0,0,0);
-			setPoints(points,0,70,270,1);
-			setPoints(points,-120,77,0,2);
-			setPoints(points,-86,166,90,3);
-			runPathFinder(points, 4,31);
-			grip.setDropper(true);
-			grip.setHolder(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,7,35,90,1);
-			runPathFinder(points, 2,0);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-15,120,90,1);
-			runPathFinder(points, 2,73);
-			grip.setDropper(true);
-			grip.setHolder(false);
-
-		}
-
-		//Middle to Right Switch then Left Scale
-		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 1)
+		if (gameData[0] == 'R' && startingPos == 2)
 		{
 			delete points;
 			grip.setDropper(false);
 			grip.setHolder(true);
 			points = new Waypoint[3];
 			setPoints(points,0,0,0,0);
-			setPoints(points,109,120,0,1);
-			setPoints(points,86,164,270,2);
-			runPathFinder(points, 3,31);
+			setPoints(points,0,88,-30,1);
+			setPoints(points,37,168,-90,2);
+			runPathFinder(points, 3,31); //73
 			grip.setDropper(true);
-			grip.setHolder(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,30);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-2,34,270,1);
-			runPathFinder(points, 2,0);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,30);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-179,40,270,1);
-			runPathFinder(points, 2,0);
-			delete points;
-			robotDrive.DriveStraightDistance(0.75,30);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-1,83,90,1);
-			runPathFinder(points, 2,73);
-			grip.setDropper(true);
+			robotDrive.ArcadeDrive(-0.25,0);
+			frc::Wait(0.3);
+			robotDrive.ArcadeDrive(0,0);
 			grip.setHolder(false);
 		}
-
-		//Middle to Right Switch then right scale
-		if(gameData[0] == 'R' && gameData[1] =='R' && startingPos == 1)
+		if (gameData[0] == 'L' && startingPos == 0)
 		{
 			delete points;
 			grip.setDropper(false);
 			grip.setHolder(true);
 			points = new Waypoint[3];
 			setPoints(points,0,0,0,0);
-			setPoints(points,109,120,0,1);
-			setPoints(points,86,164,270,2);
-			runPathFinder(points, 3,31);
+			setPoints(points,0,88,30,1);
+			setPoints(points,-37,168,90,2);
+			runPathFinder(points, 3,31); //73
 			grip.setDropper(true);
-			grip.setHolder(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,30);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-2,34,270,1);
-			runPathFinder(points, 2,0);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,30);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,7,123,270,1);
-			runPathFinder(points, 2,73);
-			grip.setDropper(true);
+			robotDrive.ArcadeDrive(-0.25,0);
+			frc::Wait(0.3);
+			robotDrive.ArcadeDrive(0,0);
 			grip.setHolder(false);
 		}
-
-		//Right to right scale then left switch
-		if(gameData	[0] == 'L' && gameData[1] =='R' && startingPos == 2)
+		if (gameData[0] == 'R' && startingPos == 1)
 		{
 			delete points;
 			grip.setDropper(false);
 			grip.setHolder(true);
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,39,166,0,1);
-			setPoints(points,-10,319,270,2);
-			runPathFinder(points, 3,73);
-			grip.setDropper(true);
-			grip.setHolder(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,30);
-			points = new Waypoint[4];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-14,-87,270,1);
-			setPoints(points,-120,-92,270,2);
-			setPoints(points,-172,-110,180,3);
-			runPathFinder(points, 4,0);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,20);
 			points = new Waypoint[2];
 			setPoints(points,0,0,0,0);
-			setPoints(points,-7,-44,90,1);
+			setPoints(points,-54,144,0,1);
 			runPathFinder(points, 2,31);
 			grip.setDropper(true);
+			robotDrive.ArcadeDrive(-0.25,0);
+			frc::Wait(1);
+			robotDrive.ArcadeDrive(0,0);
 			grip.setHolder(false);
 		}
-
-		//Right to right switch then left scale
-		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 2)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,14,117,0,1);
-			setPoints(points,-24,162,270,2);
-			runPathFinder(points, 3,31);
-			grip.setDropper(true);
-			grip.setHolder(false);
-			frc::Wait(.2);
-			delete points;
-			robotDrive.DriveStraightDistance(-0.75,30);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-3,38,270,1);
-			runPathFinder(points, 2,0);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			frc::Wait(.2);
-			delete points;
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-38,67,270,1);
-			setPoints(points,-152,78,270,2);
-			runPathFinder(points, 3,0);
-			delete points;
-			robotDrive.DriveStraightDistance(0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-30,78,90,1);
-			runPathFinder(points, 2,73);
-			grip.setDropper(true);
-			grip.setHolder(false);
-		}
-
-
-		//Right to left scale then left switch
-		if(gameData[0] == 'L' && gameData[1] =='L' && startingPos == 2)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[4];
-			setPoints(points,0,0,0,0);
-			setPoints(points,0,238,270,1);
-			setPoints(points,-195,251,270,2);
-			setPoints(points,-208,314,90,3);
-			runPathFinder(points, 4,73); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,16,-115,90,1);
-			runPathFinder(points, 2,0); //73
-			grip.setDropper(true);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,0,-32,90,1);
-			runPathFinder(points, 2,31); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-		}
-
-		//Right to right switch then right scale
-		if(gameData[0] == 'R' && gameData[1] =='R' && startingPos == 2)
+		if (gameData[0] == 'L' && startingPos == 1)
 		{
 			delete points;
 			grip.setDropper(false);
 			grip.setHolder(true);
 			points = new Waypoint[2];
 			setPoints(points,0,0,0,0);
-			setPoints(points,-16,143,270,1);
-			runPathFinder(points, 2,31); //73
+			setPoints(points,54,144,0,1);
+			runPathFinder(points, 2,31);
 			grip.setDropper(true);
-			grip.setHolder(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-16,20,270,1);
-			runPathFinder(points, 2,0); //73
-			grip.setDropper(true);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,10,153,270,1);
-			runPathFinder(points, 2,73); //73
-			grip.setDropper(true);
+			robotDrive.ArcadeDrive(-0.25,0);
+			frc::Wait(1);
+			robotDrive.ArcadeDrive(0,0);
 			grip.setHolder(false);
 		}
+//		if (gameData[0] == 'L' && startingPos == 2)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,0,88,-30,1);
+//			setPoints(points,37,168,-90,2);
+//			runPathFinder(points, 3,31); //73
+//			grip.setDropper(true);
+//			robotDrive.ArcadeDrive(-0.25,0);
+//			frc::Wait(0.3);
+//			robotDrive.ArcadeDrive(0,0);
+//			grip.setHolder(false);
+//		}
+//		if (gameData[0] == 'R' && startingPos == 0)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,0,88,30,1);
+//			setPoints(points,-37,168,90,2);
+//			runPathFinder(points, 3,31); //73
+//			grip.setDropper(true);
+//			robotDrive.ArcadeDrive(-0.25,0);
+//			frc::Wait(0.3);
+//			robotDrive.ArcadeDrive(0,0);
+//			grip.setHolder(false);
+//		}
 
-		//Left to left scale then right switch
-		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 0)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,21,318,90,1);
-			runPathFinder(points, 2,73); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,24,-108,180,1);
-			runPathFinder(points, 2,0); //73
-			grip.setDropper(true);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,30);
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,171,22,90,1);
-			setPoints(points,160,-47,270,2);
-			runPathFinder(points, 3,31); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-		}
 
-		//Left to left switch then right scale I DIDNT DO
-		if(gameData[0] == 'L' && gameData[1] =='R' && startingPos == 0)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-27,88,0,1);
-			setPoints(points,37,165,90,2);
-			runPathFinder(points, 3,31); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-17,33,90,1);
-			runPathFinder(points, 2,0);
-			grip.setHolder(true);
-			grip.setDropper(false);
-			points = new Waypoint[5];
-			setPoints(points,0,0,0,0);
-			setPoints(points,41,65,90,1);
-			setPoints(points,67,73,90,2);
-			setPoints(points,191,733,90,3);
-			setPoints(points,179,153,270,4);
-			runPathFinder(points, 5,0);
-		}
 
-		//Left to right scale then right switch
-		if(gameData[0] == 'R' && gameData[1] =='R' && startingPos == 0)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[5];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-22,118,0,1);
-			setPoints(points,-22,233,90,2);
-			setPoints(points,220,247,90,3);
-			setPoints(points,216,319,270,4);
-			runPathFinder(points, 5,73); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,4,-69,180,1);
-			setPoints(points,-16,-118,270,2);
-			runPathFinder(points, 3,0); //73
-			grip.setDropper(true);
-			grip.setHolder(true);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,1,-35,270,1);
-			runPathFinder(points, 2,31); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-		}
 
-		//Left to left switch then left scale
-		if(gameData[0] == 'L' && gameData[1] =='L' && startingPos == 0)
-		{
-			std::cout << "Going from the left to the left to the left\n";
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,35,161,90,1);
-			runPathFinder(points, 2,31); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,1,37,90,1);
-			runPathFinder(points, 2,0); //73
-			grip.setDropper(true);
-			grip.setHolder(true);
-			delete points;
-			frc::Wait(0.2);
-			robotDrive.DriveStraightDistance(-0.75,50);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-14,122,90,1);
-			runPathFinder(points, 2,73); //73
-			grip.setDropper(true);
-			grip.setHolder(false);
 
-		}
+//		if(gameData[0] == 'L' && gameData[1] =='R' && startingPos == 1)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[4];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,0,70,270,1);
+//			setPoints(points,-120,77,0,2);
+//			setPoints(points,-86,166,90,3);
+//			runPathFinder(points, 4,31);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,7,35,90,1);
+//			runPathFinder(points,2,0);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			frc::Wait(.2);
+//			delete points;
+//			points = new Waypoint[4];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,60,32,90,1);
+//			setPoints(points,175,40,90,2);
+//			setPoints(points,179,118,270,3);
+//			runPathFinder(points, 4,73);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Middle to Left Switch then Left Scale
+//		if(gameData[0] == 'L' && gameData[1] =='L' && startingPos == 1)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[4];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,0,70,270,1);
+//			setPoints(points,-120,77,0,2);
+//			setPoints(points,-86,166,90,3);
+//			runPathFinder(points, 4,31);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,7,35,90,1);
+//			runPathFinder(points, 2,0);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-15,120,90,1);
+//			runPathFinder(points, 2,73);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//
+//		}
+//
+//		//Middle to Right Switch then Left Scale
+//		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 1)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,109,120,0,1);
+//			setPoints(points,86,164,270,2);
+//			runPathFinder(points, 3,31);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,30);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-2,34,270,1);
+//			runPathFinder(points, 2,0);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,30);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-179,40,270,1);
+//			runPathFinder(points, 2,0);
+//			delete points;
+//			robotDrive.DriveStraightDistance(0.75,30);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-1,83,90,1);
+//			runPathFinder(points, 2,73);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Middle to Right Switch then right scale
+//		if(gameData[0] == 'R' && gameData[1] =='R' && startingPos == 1)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,109,120,0,1);
+//			setPoints(points,86,164,270,2);
+//			runPathFinder(points, 3,31);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,30);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-2,34,270,1);
+//			runPathFinder(points, 2,0);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,30);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,7,123,270,1);
+//			runPathFinder(points, 2,73);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Right to right scale then left switch
+//		if(gameData	[0] == 'L' && gameData[1] =='R' && startingPos == 2)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,39,166,0,1);
+//			setPoints(points,-10,319,270,2);
+//			runPathFinder(points, 3,73);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,30);
+//			points = new Waypoint[4];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-14,-87,270,1);
+//			setPoints(points,-120,-92,270,2);
+//			setPoints(points,-172,-110,180,3);
+//			runPathFinder(points, 4,0);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,20);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-7,-44,90,1);
+//			runPathFinder(points, 2,31);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Right to right switch then left scale
+//		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 2)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,14,117,0,1);
+//			setPoints(points,-24,162,270,2);
+//			runPathFinder(points, 3,31);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			frc::Wait(.2);
+//			delete points;
+//			robotDrive.DriveStraightDistance(-0.75,30);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-3,38,270,1);
+//			runPathFinder(points, 2,0);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			frc::Wait(.2);
+//			delete points;
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-38,67,270,1);
+//			setPoints(points,-152,78,270,2);
+//			runPathFinder(points, 3,0);
+//			delete points;
+//			robotDrive.DriveStraightDistance(0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-30,78,90,1);
+//			runPathFinder(points, 2,73);
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//
+//		//Right to left scale then left switch
+//		if(gameData[0] == 'L' && gameData[1] =='L' && startingPos == 2)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[4];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,0,238,270,1);
+//			setPoints(points,-195,251,270,2);
+//			setPoints(points,-208,314,90,3);
+//			runPathFinder(points, 4,73); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,16,-115,90,1);
+//			runPathFinder(points, 2,0); //73
+//			grip.setDropper(true);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,0,-32,90,1);
+//			runPathFinder(points, 2,31); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Right to right switch then right scale
+//		if(gameData[0] == 'R' && gameData[1] =='R' && startingPos == 2)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-16,143,270,1);
+//			runPathFinder(points, 2,31); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-16,20,270,1);
+//			runPathFinder(points, 2,0); //73
+//			grip.setDropper(true);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,10,153,270,1);
+//			runPathFinder(points, 2,73); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Left to left scale then right switch
+//		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 0)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,21,318,90,1);
+//			runPathFinder(points, 2,73); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,24,-108,180,1);
+//			runPathFinder(points, 2,0); //73
+//			grip.setDropper(true);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,30);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,171,22,90,1);
+//			setPoints(points,160,-47,270,2);
+//			runPathFinder(points, 3,31); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Left to left switch then right scale I DIDNT DO
+//		if(gameData[0] == 'L' && gameData[1] =='R' && startingPos == 0)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-27,88,0,1);
+//			setPoints(points,37,165,90,2);
+//			runPathFinder(points, 3,31); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-17,33,90,1);
+//			runPathFinder(points, 2,0);
+//			grip.setHolder(true);
+//			grip.setDropper(false);
+//			points = new Waypoint[5];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,41,65,90,1);
+//			setPoints(points,67,73,90,2);
+//			setPoints(points,191,733,90,3);
+//			setPoints(points,179,153,270,4);
+//			runPathFinder(points, 5,0);
+//		}
+//
+//		//Left to right scale then right switch
+//		if(gameData[0] == 'R' && gameData[1] =='R' && startingPos == 0)
+//		{
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[5];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-22,118,0,1);
+//			setPoints(points,-22,233,90,2);
+//			setPoints(points,220,247,90,3);
+//			setPoints(points,216,319,270,4);
+//			runPathFinder(points, 5,73); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[3];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,4,-69,180,1);
+//			setPoints(points,-16,-118,270,2);
+//			runPathFinder(points, 3,0); //73
+//			grip.setDropper(true);
+//			grip.setHolder(true);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,1,-35,270,1);
+//			runPathFinder(points, 2,31); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//		}
+//
+//		//Left to left switch then left scale
+//		if(gameData[0] == 'L' && gameData[1] =='L' && startingPos == 0)
+//		{
+//			std::cout << "Going from the left to the left to the left\n";
+//			delete points;
+//			grip.setDropper(false);
+//			grip.setHolder(true);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,35,161,90,1);
+//			runPathFinder(points, 2,31); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,1,37,90,1);
+//			runPathFinder(points, 2,0); //73
+//			grip.setDropper(true);
+//			grip.setHolder(true);
+//			delete points;
+//			frc::Wait(0.2);
+//			robotDrive.DriveStraightDistance(-0.75,50);
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-14,122,90,1);
+//			runPathFinder(points, 2,73); //73
+//			grip.setDropper(true);
+//			grip.setHolder(false);
+//
+//		}
 		delete points;
 	}
 }

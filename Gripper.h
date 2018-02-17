@@ -14,7 +14,7 @@ public:
 	void setDropper(bool open);
 	void setMotors(float power);
 private:
-	TalonSRX lt, rt;
+	VictorSPX lt, rt;
 	Pneumatics holder, dropper;
 };
 

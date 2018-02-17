@@ -15,11 +15,11 @@ class SuperClimber
 {
 
 public:
-	SuperClimber(int c);
+	SuperClimber(int c1, int c2);
 	void Climb(float pow);
 
 private:
-	TalonSRX climber;
+	TalonSRX climber, helper;
 
 };
 

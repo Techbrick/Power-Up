@@ -4,15 +4,15 @@
 namespace Constants
 {
 
-	static constexpr int frontLeftDriveChannel = 12;
-	static constexpr int rearLeftDriveChannel = 13;
-	static constexpr int frontRightDriveChannel = 14;
-	static constexpr int rearRightDriveChannel = 15;
+//	static constexpr int frontLeftDriveChannel = 12;
+//	static constexpr int rearLeftDriveChannel = 13;
+//	static constexpr int frontRightDriveChannel = 14;
+//	static constexpr int rearRightDriveChannel = 15;
 	static constexpr int driveStickChannel = 0;
 	static constexpr int operatorStickChannel = 1;
 
-	static constexpr int gripperLeftMotorChannel = 99;
-	static constexpr int gripperRightMotorChannel = 99;
+//	static constexpr int gripperLeftMotorChannel = 99;
+//	static constexpr int gripperRightMotorChannel = 99;
 	static constexpr int gripperLeftPneum1Channel = 99;
 	static constexpr int gripperLeftPneum2Channel = 99;
 	static constexpr int gripperRightPneum1Channel = 99;
@@ -38,10 +38,11 @@ namespace Constants
 	static constexpr float driveStraightPValue = 0.0025;
 	static constexpr float startRampDownFactor = 72.0;
 
-	static constexpr int climbChannel = 99;
+//	static constexpr int climbChannel1 = 99;
+//	static constexpr int climbChannel2 = 99;
 
-	static constexpr int liftChannel = 10;
-	static constexpr int helpChannel = 8;
+//	static constexpr int liftChannel = 10;
+//	static constexpr int helpChannel = 8;
 	static constexpr bool liftInverted = false;
 	static constexpr bool helpInverted = false;
 	static constexpr int liftUpButton = 8;
@@ -79,6 +80,16 @@ namespace Constants
 
 	static constexpr int ledAddress = 99;
 
+	static constexpr int frontLeftDriveChannel = 33;
+	static constexpr int rearLeftDriveChannel = 34;
+	static constexpr int frontRightDriveChannel = 20;
+	static constexpr int rearRightDriveChannel = 21;
+	static constexpr int gripperLeftMotorChannel = 25;
+	static constexpr int gripperRightMotorChannel = 26;
+	static constexpr int climbChannel1 = 24;
+	static constexpr int climbChannel2 = 23;
+	static constexpr int liftChannel = 27;
+	static constexpr int helpChannel = 28;
 }
 
 #endif
