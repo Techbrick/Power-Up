@@ -42,22 +42,25 @@ SuperLifter::SuperLifter(int liftChannel, int helpChannel):
 	lift.Config_kD(0, 0.0, 0);
 
 	help.Follow(lift);
+
+	lift.ConfigPeakCurrentLimit(30,0);
+	help.ConfigPeakCurrentLimit(30,0);
 }
 
 void SuperLifter::Lift(float pow)
 {
 	//if (lift.GetOutputCurrent() < Constants::lifterMaxCurrent)
-	if(true)
-	{
+//	if(true)
+//	{
 		lift.Set(ControlMode::PercentOutput, pow);
 //		help.Set(ControlMode::PercentOutput, pow);
 //		std::cout << lift.GetSelectedSensorPosition(0) << "\n";
 		this->Reset();
-	}
-	else
-	{
-		this->Brake();
-	}
+//	}
+//	else
+//	{
+//		this->Brake();
+//	}
 }
 
 void SuperLifter::Brake()

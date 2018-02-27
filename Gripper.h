@@ -13,6 +13,8 @@ public:
 	void setHolder(bool open);
 	void setDropper(bool open);
 	void setMotors(float power);
+	bool getHolder();
+	bool getDropper();
 private:
 	VictorSPX lt, rt;
 	Pneumatics holder, dropper;

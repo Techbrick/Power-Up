@@ -13,9 +13,8 @@ Gripper::Gripper(int l, int r, int h1, int h2, int d1, int d2):
 	rt.ClearStickyFaults(0);
 	lt.SetNeutralMode(NeutralMode::Brake);
 	rt.SetNeutralMode(NeutralMode::Brake);
-
-	lt.ConfigSelectedFeedbackSensor(motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
-	rt.ConfigSelectedFeedbackSensor(motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
+	lt.SetInverted(Constants::leftGripperInverted);
+	rt.SetInverted(Constants::rightGripperInverted);
 }
 
 void Gripper::setMotors(float power)
@@ -37,4 +36,14 @@ void Gripper::setHolder(bool open)
 void Gripper::setDropper(bool open)
 {
 	dropper.set(open);
+}
+
+bool Gripper::getHolder()
+{
+	return holder.get();
+}
+
+bool Gripper::getDropper()
+{
+	return dropper.get();
 }

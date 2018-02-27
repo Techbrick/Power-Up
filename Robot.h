@@ -14,6 +14,8 @@
 #include <pathfinder.h>
 #include <iostream>
 #include "I2C.h"
+#include "Pneumatics.h"
+#include "Positionator.h"
 
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
@@ -32,6 +34,7 @@ private:
 	Gripper grip;
 	Aimer aim;
 	I2C i2c;
+	Pneumatics shifter;
 	void runPathFinder(Waypoint* points, int POINT_LENGTH, int height);
 	void colorSend(uint8_t numToSend);
 

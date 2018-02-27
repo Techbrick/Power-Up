@@ -3,28 +3,21 @@
 
 namespace Constants
 {
-
-//	static constexpr int frontLeftDriveChannel = 12;
-//	static constexpr int rearLeftDriveChannel = 13;
-//	static constexpr int frontRightDriveChannel = 14;
-//	static constexpr int rearRightDriveChannel = 15;
 	static constexpr int driveStickChannel = 0;
 	static constexpr int operatorStickChannel = 1;
 
-//	static constexpr int gripperLeftMotorChannel = 99;
-//	static constexpr int gripperRightMotorChannel = 99;
-	static constexpr int gripperLeftPneum1Channel = 99;
-	static constexpr int gripperLeftPneum2Channel = 99;
-	static constexpr int gripperRightPneum1Channel = 99;
-	static constexpr int gripperRightPneum2Channel = 99;
+	static constexpr int gripperLeftPneum1Channel = 4;
+	static constexpr int gripperLeftPneum2Channel = 5;
+	static constexpr int gripperRightPneum1Channel = 0;
+	static constexpr int gripperRightPneum2Channel = 1;
 
 	static constexpr bool gRightInverted = false;
 	static constexpr bool gLeftInverted = false;
 
-	static constexpr bool frontLeftInverted = true;
+	static constexpr bool frontLeftInverted = false;
 	static constexpr bool rearLeftInverted = false;
-	static constexpr bool frontRightInverted = false;
-	static constexpr bool rearRightInverted = false;
+	static constexpr bool frontRightInverted = true;
+	static constexpr bool rearRightInverted = true;
 
 	static constexpr int tankDriveLeftAxis = 1;
 	static constexpr int tankDriveRightAxis = 5;
@@ -38,17 +31,12 @@ namespace Constants
 	static constexpr float driveStraightPValue = 0.0025;
 	static constexpr float startRampDownFactor = 72.0;
 
-//	static constexpr int climbChannel1 = 99;
-//	static constexpr int climbChannel2 = 99;
-
-//	static constexpr int liftChannel = 10;
-//	static constexpr int helpChannel = 8;
 	static constexpr bool liftInverted = false;
 	static constexpr bool helpInverted = false;
-	static constexpr int liftUpButton = 8;
-	static constexpr int liftUpAxis = 4;
-	static constexpr int liftDownButton = 7;
-	static constexpr int liftDownAxis = 3;
+	static constexpr int liftUpButton = 7;
+	static constexpr int liftUpAxis = 3;
+	static constexpr int liftDownButton = 8;
+	static constexpr int liftDownAxis = 4;
 	static constexpr bool liftEncoderInverted = true;
 	static constexpr float lifterMaxCurrent = 20.0;
 	static constexpr float lifterHeightPerRev = 20.0;
@@ -59,7 +47,7 @@ namespace Constants
 
 	static constexpr float highPower = 1.0;
 	static constexpr float normPower = 0.75;
-	static float percentDrivePower = 0.75;
+	static constexpr float percentDrivePower = 0.75;
 
 	static constexpr float encoderFactor = 1.0;
 	static constexpr bool frontLeftEncoderInverted = false;
@@ -79,6 +67,29 @@ namespace Constants
 	static constexpr float powerPerVelocity = 2.3 * 0.5 / 3.35;
 
 	static constexpr int ledAddress = 99;
+
+	static constexpr int shifterChannel1 = 6;
+	static constexpr int shifterChannel2 = 7;
+
+	static constexpr int shifterButton = 5;
+	static constexpr int dropperButton = 1;
+	static constexpr int holderButton = 3;
+	static constexpr int intakeButton = 2;
+	static constexpr int shootyButton = 4;
+
+	static constexpr bool leftGripperInverted = true;
+	static constexpr bool rightGripperInverted = false;
+
+//	static constexpr int frontLeftDriveChannel = 12;
+//	static constexpr int rearLeftDriveChannel = 13;
+//	static constexpr int frontRightDriveChannel = 14;
+//	static constexpr int rearRightDriveChannel = 15;
+//	static constexpr int gripperLeftMotorChannel = 99;
+//	static constexpr int gripperRightMotorChannel = 99;
+//	static constexpr int climbChannel1 = 99;
+//	static constexpr int climbChannel2 = 99;
+//	static constexpr int liftChannel = 10;
+//	static constexpr int helpChannel = 8;
 
 	static constexpr int frontLeftDriveChannel = 33;
 	static constexpr int rearLeftDriveChannel = 34;
