@@ -24,6 +24,7 @@ public:
 	void SetPosition(float revs);
 	int GetEncoder();
 	void Zero();
+	float GetCurrent();
 
 private:
 	TalonSRX lift;

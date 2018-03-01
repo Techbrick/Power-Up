@@ -161,6 +161,27 @@ void Robot::OperatorControl()
 
 		if (lift.GetEncoder() * Constants::lifterHeightPerRev / 4096 <= Constants::lifterMaxHeight)
 		{
+//			if (operatorStick.GetRawButton(9))
+//			{
+//				colorSend(5);
+//				lift.SetPosition(0);
+//			}
+//			else if (operatorStick.GetRawButton(10))
+//			{
+//				colorSend(5);
+//				lift.SetPosition(33);
+//			}
+//			else if (operatorStick.GetRawButton(10))
+//			{
+//				colorSend(5);
+//				lift.SetPosition(100);
+//			}
+//			else if (operatorStick.GetRawButton(10))
+//			{
+//				colorSend(5);
+//				lift.SetPosition(120);
+//			}
+
 			if (driveStick.GetRawButton(Constants::liftUpButton))
 			{
 				colorSend(5);
@@ -194,6 +215,7 @@ void Robot::OperatorControl()
 				lift.Brake();
 				firstLifterPosition = true;
 			}
+//			lift.Position();
 		}
 		else
 		{
@@ -222,6 +244,7 @@ void Robot::OperatorControl()
 		SmartDashboard::PutNumber("WorldLinearAccelX", gyro.GetWorldLinearAccelX());
 		SmartDashboard::PutNumber("WorldLinearAccelY", gyro.GetWorldLinearAccelY());
 		SmartDashboard::PutNumber("WorldLinearAccelZ", gyro.GetWorldLinearAccelZ());
+		SmartDashboard::PutNumber("Lifter Current", lift.GetCurrent());
 
 		//////////////////////////////////////////////////////////////////////////////
 		//							TOGGLE CERTAIN THINGS							//

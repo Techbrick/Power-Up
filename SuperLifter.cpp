@@ -45,6 +45,9 @@ SuperLifter::SuperLifter(int liftChannel, int helpChannel):
 
 	lift.ConfigPeakCurrentLimit(30,0);
 	help.ConfigPeakCurrentLimit(30,0);
+
+	lift.ConfigPeakOutputReverse(0.0,0);
+	help.ConfigPeakOutputReverse(0.0,0);
 }
 
 void SuperLifter::Lift(float pow)
@@ -86,13 +89,13 @@ void SuperLifter::Reset()
 
 void SuperLifter::Position()
 {
-	lift.Set(ControlMode::Position, penc);
+	lift.Set(ControlMode::Position, penc + zero);
 	this->Reset();
 }
 
 void SuperLifter::SetPosition(float revs)
 {
-	penc = revs * 4096 + lift.GetSelectedSensorPosition(0);
+	penc = revs * 4096;
 }
 
 int SuperLifter::GetEncoder()
@@ -103,4 +106,9 @@ int SuperLifter::GetEncoder()
 void SuperLifter::Zero()
 {
 	zero = lift.GetSelectedSensorPosition(0);
+}
+
+float SuperLifter::GetCurrent()
+{
+	return float(lift.GetOutputCurrent() + help.GetOutputCurrent())/2;
 }

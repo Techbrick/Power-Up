@@ -39,8 +39,8 @@ namespace Constants
 	static constexpr int liftDownAxis = 4;
 	static constexpr bool liftEncoderInverted = true;
 	static constexpr float lifterMaxCurrent = 20.0;
-	static constexpr float lifterHeightPerRev = 20.0;
-	static constexpr float lifterMaxHeight = 100.0;
+	static constexpr float lifterHeightPerRev = 7.85398163*3*2;
+	static constexpr float lifterMaxHeight = 180.0;
 
 	static constexpr float minForwardPower = 0.025; //TODO: figure this out boyz
 	static constexpr float angleErrorLimit = 1.0; //TODO: change this boyz
