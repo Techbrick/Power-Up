@@ -35,6 +35,7 @@ private:
 	Aimer aim;
 	I2C i2c;
 	Pneumatics shifter;
+	DigitalInput upLim, downLim, rIR, lIR;
 	void runPathFinder(Waypoint* points, int POINT_LENGTH, int height);
 	void colorSend(uint8_t numToSend);
 

@@ -13,7 +13,11 @@ Robot::Robot() :
 		grip(Constants::gripperLeftMotorChannel,Constants::gripperRightMotorChannel,Constants::gripperLeftPneum1Channel,Constants::gripperLeftPneum2Channel,Constants::gripperRightPneum1Channel,Constants::gripperRightPneum2Channel),
 		aim(),
 		i2c(I2C::kOnboard,Constants::ledAddress),
-		shifter(Constants::shifterChannel1,Constants::shifterChannel2)
+		shifter(Constants::shifterChannel1,Constants::shifterChannel2),
+		upLim(8),
+		downLim(9),
+		rIR(0),
+		lIR(1)
 {
 	gyro.ZeroYaw();
 }
@@ -159,7 +163,7 @@ void Robot::OperatorControl()
 		//								LIFT CODE									//
 		//////////////////////////////////////////////////////////////////////////////
 
-		if (lift.GetEncoder() * Constants::lifterHeightPerRev / 4096 <= Constants::lifterMaxHeight)
+		if (lift.GetEncoder() * Constants::lifterHeightPerRev / 4096 <= Constants::lifterMaxHeight && upLim.Get() && downLim.Get())
 		{
 //			if (operatorStick.GetRawButton(9))
 //			{
@@ -216,6 +220,16 @@ void Robot::OperatorControl()
 				firstLifterPosition = true;
 			}
 //			lift.Position();
+		}
+		else if (!upLim.Get())
+		{
+			lift.Lift(0.1);
+			firstLifterPosition = true;
+		}
+		else if (!downLim.Get())
+		{
+			lift.Lift(-0.1);
+			firstLifterPosition = true;
 		}
 		else
 		{
@@ -331,6 +345,11 @@ void Robot::OperatorControl()
 		}
 		else
 			togglingShooty = false;
+
+		if (rIR.Get() && lIR.Get())
+		{
+			grip.setMotors(0.0);
+		}
 
 		//////////////////////////////////////////////////////////////////////////////
 		//							SUPER SHIFTER STUFFS							//
