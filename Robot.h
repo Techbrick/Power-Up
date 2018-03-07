@@ -16,6 +16,7 @@
 #include "I2C.h"
 #include "Pneumatics.h"
 #include "Positionator.h"
+#include <networktables/NetworkTableInstance.h>
 
 #ifndef SRC_ROBOT_H_
 #define SRC_ROBOT_H_
@@ -32,7 +33,7 @@ private:
 	SuperLifter lift;
 	SuperClimber climber;
 	Gripper grip;
-	Aimer aim;
+//	Aimer aim;
 	I2C i2c;
 	Pneumatics shifter;
 	DigitalInput upLim, downLim, rIR, lIR;

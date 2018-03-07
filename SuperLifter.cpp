@@ -15,7 +15,8 @@ SuperLifter::SuperLifter(int liftChannel, int helpChannel):
 	d(0.00001),
 	penc(0),
 	tgt(-1),
-	zero(0)
+	zero(0),
+	brakePow(0)
 {
 	lift.ClearStickyFaults(0);
 	help.ClearStickyFaults(0);
@@ -46,8 +47,8 @@ SuperLifter::SuperLifter(int liftChannel, int helpChannel):
 	lift.ConfigPeakCurrentLimit(30,0);
 	help.ConfigPeakCurrentLimit(30,0);
 
-	lift.ConfigPeakOutputReverse(0.0,0);
-	help.ConfigPeakOutputReverse(0.0,0);
+	lift.ConfigPeakOutputReverse(-0.4,0);
+	help.ConfigPeakOutputReverse(-0.4,0);
 }
 
 void SuperLifter::Lift(float pow)
@@ -55,7 +56,7 @@ void SuperLifter::Lift(float pow)
 	//if (lift.GetOutputCurrent() < Constants::lifterMaxCurrent)
 //	if(true)
 //	{
-		lift.Set(ControlMode::PercentOutput, pow);
+		lift.Set(ControlMode::PercentOutput, pow + brakePow);
 //		help.Set(ControlMode::PercentOutput, pow);
 //		std::cout << lift.GetSelectedSensorPosition(0) << "\n";
 		this->Reset();
@@ -79,6 +80,8 @@ void SuperLifter::Brake()
 //	std::cout << penc << "         " << kp << "      " << kd << "         " << pow << "\n";
 	lift.Set(ControlMode::Position, tgt);
 //	std::cout << lift.GetSelectedSensorPosition(0) << "\n";
+
+	brakePow = (lift.GetMotorOutputPercent() + help.GetMotorOutputPercent())/2;
 
 }
 

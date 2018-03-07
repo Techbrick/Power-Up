@@ -29,7 +29,7 @@ public:
 private:
 	TalonSRX lift;
 	TalonSRX help;
-	float p, d, penc, tgt, zero;
+	float p, d, penc, tgt, zero, brakePow;
 
 };
 

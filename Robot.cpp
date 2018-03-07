@@ -11,7 +11,7 @@ Robot::Robot() :
 		lift(Constants::liftChannel,Constants::helpChannel),
 		climber(Constants::climbChannel1,Constants::climbChannel2),
 		grip(Constants::gripperLeftMotorChannel,Constants::gripperRightMotorChannel,Constants::gripperLeftPneum1Channel,Constants::gripperLeftPneum2Channel,Constants::gripperRightPneum1Channel,Constants::gripperRightPneum2Channel),
-		aim(),
+//		aim(),
 		i2c(I2C::kOnboard,Constants::ledAddress),
 		shifter(Constants::shifterChannel1,Constants::shifterChannel2),
 		upLim(8),
@@ -42,9 +42,12 @@ void Robot::RobotInit()
 
 void Robot::OperatorControl()
 {
+	robotDrive.TankDrive(0,0);
 
 	SmartDashboard::PutNumber("xpos", 0);
 	SmartDashboard::PutNumber("ypos", 0);
+
+	SmartDashboard::PutBoolean("Opened", true);
 
 	gyro.Reset();
 	SmartDashboard::PutBoolean("in op ctrl", true);
@@ -84,10 +87,10 @@ void Robot::OperatorControl()
 	while(IsOperatorControl() && IsEnabled())
 	{
 
-		SmartDashboard::PutNumber("TJ's thing",aim.GetHorizontalAngles());
+//		SmartDashboard::PutNumber("TJ's thing",aim.GetHorizontalAngles());
 
 //		if (lift.GetEncoder() > 0)
-//		{
+//		{fr5555555t5ttttttTT%T%TTTtttttttttttt5tt%
 //			Constants::percentDrivePower = (Constants::normPower/3) * (Constants::lifterMaxHeight - (Constants::lifterHeightPerRev * lift.GetEncoder() / 4096)) / Constants::lifterMaxHeight + 2*(Constants::normPower/3);
 //		}
 
@@ -163,8 +166,8 @@ void Robot::OperatorControl()
 		//								LIFT CODE									//
 		//////////////////////////////////////////////////////////////////////////////
 
-		if (lift.GetEncoder() * Constants::lifterHeightPerRev / 4096 <= Constants::lifterMaxHeight && upLim.Get() && downLim.Get())
-		{
+//		if (lift.GetEncoder() <= 14880)// && !upLim.Get() )//&& downLim.Get())
+//		{
 //			if (operatorStick.GetRawButton(9))
 //			{
 //				colorSend(5);
@@ -186,21 +189,22 @@ void Robot::OperatorControl()
 //				lift.SetPosition(120);
 //			}
 
-			if (driveStick.GetRawButton(Constants::liftUpButton))
+			if (driveStick.GetRawButton(Constants::liftUpButton) || operatorStick.GetPOV() == 0)
 			{
+				if(operatorStick.GetPOV() == 0)
 				colorSend(5);
-				lift.Lift((driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5));
+				lift.Lift(((driveStick.GetRawAxis(Constants::liftUpAxis) + operatorStick.GetPOV() == 0 ? 1 : 0)/2.0 + 0.5));
 			}
-			else if (driveStick.GetRawButton(Constants::liftDownButton))
+			else if (driveStick.GetRawButton(Constants::liftDownButton) || operatorStick.GetPOV() == 180)
 			{
 				colorSend(7);
-				lift.Lift(-1*(driveStick.GetRawAxis(Constants::liftDownAxis)/2.0 + 0.5));
+				lift.Lift(-1*((driveStick.GetRawAxis(Constants::liftDownAxis) + operatorStick.GetPOV() == 180 ? 1 : 0)/2.0 + 0.5));
 			}
 //			else if (driveStick.GetRawButton(4))
 //			{
 //				if (firstLifterPosition)
 //				{
-//					firstLifterPosition = false;
+//					firstLifterPosition =   false;
 //					lift.SetPosition(2);
 //				}
 //				lift.Position();
@@ -219,23 +223,32 @@ void Robot::OperatorControl()
 				lift.Brake();
 				firstLifterPosition = true;
 			}
+
+			if(lift.GetEncoder() <= -100)
+			{
+				lift.Lift(-0.2);
+			}
+			else if (lift.GetEncoder() >= 14800)
+			{
+				lift.Lift(+0.1);
+			}
 //			lift.Position();
-		}
-		else if (!upLim.Get())
-		{
-			lift.Lift(0.1);
-			firstLifterPosition = true;
-		}
-		else if (!downLim.Get())
-		{
-			lift.Lift(-0.1);
-			firstLifterPosition = true;
-		}
-		else
-		{
-			lift.Brake();
-			firstLifterPosition = true;
-		}
+//		}
+//		else if (upLim.Get())
+//		{
+//			lift.Lift(-0.1);
+//			firstLifterPosition = true;
+//		}
+//		else if (!downLim.Get())
+//		{
+//			lift.Lift(-0.1);
+//			firstLifterPosition = true;
+//		}
+//		else
+//		{
+//			lift.Lift(-0.1);
+//			firstLifterPosition = true;
+//		}
 //		std::cout << -1 * (driveStick.GetRawAxis(Constants::liftUpAxis)/2.0 + 0.5);
 
 
@@ -243,7 +256,9 @@ void Robot::OperatorControl()
 		//							SMART DASHBOARD STUFF							//
 		//////////////////////////////////////////////////////////////////////////////
 
-
+			SmartDashboard::PutBoolean("Opened", grip.getHolder());
+			SmartDashboard::PutBoolean("Spinning", shootyPower != 0);
+			SmartDashboard::PutNumber("fightstickPOV", operatorStick.GetPOV());
 		SmartDashboard::PutNumber("drive axis 1", driveStick.GetRawAxis(Constants::tankDriveLeftAxis));
 		SmartDashboard::PutNumber("drive axis 5", driveStick.GetRawAxis(Constants::tankDriveRightAxis));
 		SmartDashboard::PutNumber("Left Encoder", robotDrive.GetLeftEncoder());
@@ -259,6 +274,7 @@ void Robot::OperatorControl()
 		SmartDashboard::PutNumber("WorldLinearAccelY", gyro.GetWorldLinearAccelY());
 		SmartDashboard::PutNumber("WorldLinearAccelZ", gyro.GetWorldLinearAccelZ());
 		SmartDashboard::PutNumber("Lifter Current", lift.GetCurrent());
+		SmartDashboard::PutNumber("Lifter Encoder", lift.GetEncoder());
 
 		//////////////////////////////////////////////////////////////////////////////
 		//							TOGGLE CERTAIN THINGS							//
@@ -278,7 +294,7 @@ void Robot::OperatorControl()
 		else
 			togglingDriveMode = false;
 
-		if (driveStick.GetRawButton(Constants::dropperButton))
+		if (driveStick.GetRawButton(Constants::dropperButton) || operatorStick.GetRawButton(4))
 		{
 			if (!togglingDropper)
 			{
@@ -292,7 +308,7 @@ void Robot::OperatorControl()
 		else
 			togglingDropper = false;
 
-		if (driveStick.GetRawButton(Constants::holderButton))
+		if (driveStick.GetRawButton(Constants::holderButton) || operatorStick.GetRawButton(1))
 		{
 			if (!togglingHolder)
 			{
@@ -306,14 +322,14 @@ void Robot::OperatorControl()
 		else
 			togglingHolder = false;
 
-		if (driveStick.GetRawButton(Constants::intakeButton))
+		if (driveStick.GetRawButton(Constants::intakeButton) || operatorStick.GetRawButton(2))
 		{
 			if (!togglingIntake)
 			{
 				if (shootyPower == 0)
 				{
-					grip.setMotors(0.5);
-					shootyPower = 0.5;
+					grip.setMotors(1);
+					shootyPower = 1;
 				}
 				else
 				{
@@ -326,14 +342,14 @@ void Robot::OperatorControl()
 		else
 			togglingIntake = false;
 
-		if (driveStick.GetRawButton(Constants::shootyButton))
+		if (driveStick.GetRawButton(Constants::shootyButton) || operatorStick.GetRawButton(3))
 		{
 			if (!togglingShooty)
 			{
 				if (shootyPower == 0)
 				{
-					grip.setMotors(-0.5);
-					shootyPower = -0.5;
+					grip.setMotors(-1);
+					shootyPower = -1;
 				}
 				else
 				{
@@ -346,19 +362,19 @@ void Robot::OperatorControl()
 		else
 			togglingShooty = false;
 
-		if (rIR.Get() && lIR.Get())
-		{
-			grip.setMotors(0.0);
-		}
+//		if (rIR.Get() && lIR.Get())
+//		{
+//			grip.setMotors(0.0);
+//		}
 
 		//////////////////////////////////////////////////////////////////////////////
 		//							SUPER SHIFTER STUFFS							//
 		//////////////////////////////////////////////////////////////////////////////
 
 		if(driveStick.GetRawButton(Constants::shifterButton))
-			shifter.set(false);
-		else
 			shifter.set(true);
+		else
+			shifter.set(false);
 
 		//////////////////////////////////////////////////////////////////////////////
 		//								POSITIONATOR								//
@@ -521,7 +537,7 @@ void Robot::Autonomous()
 	std::string gameData("");
 	int startingPos = 0; // 0 == left; 1 == middle; 2 == right;
 	int target = 0; // 0 == our switch; 1 == scale; 2 == enemy switch
-	bool justGoStraight = false;
+	bool justGoStraight = true;
 	int ctr = 0;
 
 	//Call from FMS and SmartDashboard
@@ -560,73 +576,61 @@ void Robot::Autonomous()
 	//Middle To Left Switch Then Right Scale
 	if (justGoStraight || ctr >= 100)
 	{
-		robotDrive.DriveStraightDistance(-0.75, 120);
+		//robotDrive.TankDrive(-0.35, -0.35);
+		//frc::Wait(2.5);
+		//robotDrive.TankDrive(0,0);
+		robotDrive.DriveStraightDistance(0.5F, 12);
 	}
 	else
 	{
-		if (gameData[0] == 'R' && startingPos == 2)
+
+		if (startingPos == 0 && gameData[0] == 'L')
 		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,0,88,-30,1);
-			setPoints(points,37,168,-90,2);
-			runPathFinder(points, 3,31); //73
-			grip.setDropper(true);
-			robotDrive.ArcadeDrive(-0.25,0);
+			robotDrive.TankDrive(-0.35, -0.35);
+			frc::Wait(2.5);
+			robotDrive.TankDrive(-0.3,0.3);
 			frc::Wait(0.3);
-			robotDrive.ArcadeDrive(0,0);
-			grip.setHolder(false);
+			robotDrive.TankDrive(-0.25,-0.25);
+			frc::Wait(1);
+			lift.Lift(0.5);
+			frc::Wait(1);
+			grip.setDropper(!grip.getDropper());
+			frc::Wait(0.5);
+			grip.setMotors(-1.0);
+			frc::Wait(0.5);
+			grip.setMotors(0.0);
 		}
-		if (gameData[0] == 'L' && startingPos == 0)
+		else if (startingPos == 0 && gameData[0] == 'R')
 		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[3];
-			setPoints(points,0,0,0,0);
-			setPoints(points,0,88,30,1);
-			setPoints(points,-37,168,90,2);
-			runPathFinder(points, 3,31); //73
-			grip.setDropper(true);
-			robotDrive.ArcadeDrive(-0.25,0);
+			robotDrive.TankDrive(-0.35, -0.35);
+			frc::Wait(2.5);
+			robotDrive.TankDrive(0,0);
+		}
+
+		if (startingPos == 2 && gameData[0] == 'R')
+		{
+			robotDrive.TankDrive(-0.35, -0.35);
+			frc::Wait(2.5);
+			robotDrive.TankDrive(0.3,-0.3);
 			frc::Wait(0.3);
-			robotDrive.ArcadeDrive(0,0);
-			grip.setHolder(false);
-		}
-		if (gameData[0] == 'R' && startingPos == 1)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-54,140,0,1);
-			runPathFinder(points, 2,31);
-			grip.setDropper(true);
-			robotDrive.ArcadeDrive(-0.25,0);
+			robotDrive.TankDrive(-0.25,-0.25);
 			frc::Wait(1);
-			robotDrive.ArcadeDrive(0,0);
-			grip.setHolder(false);
-		}
-		if (gameData[0] == 'L' && startingPos == 1)
-		{
-			delete points;
-			grip.setDropper(false);
-			grip.setHolder(true);
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,54,144,0,1);
-			runPathFinder(points, 2,31);
-			grip.setDropper(true);
-			robotDrive.ArcadeDrive(-0.25,0);
+			lift.Lift(0.5);
 			frc::Wait(1);
-			robotDrive.ArcadeDrive(0,0);
-			grip.setHolder(false);
+			grip.setDropper(!grip.getDropper());
+			frc::Wait(0.5);
+			grip.setMotors(-1.0);
+			frc::Wait(0.5);
+			grip.setMotors(0.0);
 		}
-//		if (gameData[0] == 'L' && startingPos == 2)
+		else if (startingPos == 2 && gameData[0] == 'L')
+		{
+			robotDrive.TankDrive(-0.35, -0.35);
+			frc::Wait(2.5);
+			robotDrive.TankDrive(0,0);
+		}
+
+//		if (gameData[0] == 'R' && startingPos == 2)
 //		{
 //			delete points;
 //			grip.setDropper(false);
@@ -642,7 +646,7 @@ void Robot::Autonomous()
 //			robotDrive.ArcadeDrive(0,0);
 //			grip.setHolder(false);
 //		}
-//		if (gameData[0] == 'R' && startingPos == 0)
+//		if (gameData[0] == 'L' && startingPos == 0)
 //		{
 //			delete points;
 //			grip.setDropper(false);
@@ -658,48 +662,110 @@ void Robot::Autonomous()
 //			robotDrive.ArcadeDrive(0,0);
 //			grip.setHolder(false);
 //		}
-
-		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 0)
-		{
+//		if (gameData[0] == 'R' && startingPos == 1)
+//		{
 //			delete points;
 //			grip.setDropper(false);
-//			grip.setHolder(true);
-//			points = new Waypoint[3];
-//			setPoints(points,0,0,0,0);
-//			setPoints(points,10,180,0,1);
-//			setPoints(points,-21,240,90,2);
-//			runPathFinder(points, 3,73); //73
-//			grip.setDropper(true);
 //			grip.setHolder(false);
-			robotDrive.DriveStraightDistance(-0.75, 120);
-		}
-		if(gameData[0] == 'L' && gameData[1] =='R' && startingPos == 2)
-		{
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-54,140,0,1);
+//			runPathFinder(points, 2,31);
+//			grip.setDropper(true);
+//			robotDrive.ArcadeDrive(-0.25,0);
+//			frc::Wait(1);
+//			robotDrive.ArcadeDrive(0,0);
+//			grip.setHolder(false);
+//		}
+//		if (gameData[0] == 'L' && startingPos == 1)
+//		{
 //			delete points;
 //			grip.setDropper(false);
-//			grip.setHolder(true);
-//			points = new Waypoint[3];
-//			setPoints(points,0,0,0,0);
-//			setPoints(points,-10,180,0,1);
-//			setPoints(points,21,240,-90,2);
-//			runPathFinder(points, 3,73); //73
-//			grip.setDropper(true);
 //			grip.setHolder(false);
-			robotDrive.DriveStraightDistance(-0.75, 120);
-		}
-		if (startingPos == 3)
-		{
-			delete points;
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-20,40,0,1);
-			runPathFinder(points, 2,73); //73
-			delete points;
-			points = new Waypoint[2];
-			setPoints(points,0,0,0,0);
-			setPoints(points,-40,40,90,1);
-			runPathFinder(points, 2,73); //73
-		}
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,54,144,0,1);
+//			runPathFinder(points, 2,31);
+//			grip.setDropper(true);
+//			robotDrive.ArcadeDrive(-0.25,0);
+//			frc::Wait(1);
+//			robotDrive.ArcadeDrive(0,0);
+//			grip.setHolder(false);
+//		}
+////		if (gameData[0] == 'L' && startingPos == 2)
+////		{
+////			delete points;
+////			grip.setDropper(false);
+////			grip.setHolder(true);
+////			points = new Waypoint[3];
+////			setPoints(points,0,0,0,0);
+////			setPoints(points,0,88,-30,1);
+////			setPoints(points,37,168,-90,2);
+////			runPathFinder(points, 3,31); //73
+////			grip.setDropper(true);
+////			robotDrive.ArcadeDrive(-0.25,0);
+////			frc::Wait(0.3);
+////			robotDrive.ArcadeDrive(0,0);
+////			grip.setHolder(false);
+////		}
+////		if (gameData[0] == 'R' && startingPos == 0)
+////		{
+////			delete points;
+////			grip.setDropper(false);
+////			grip.setHolder(true);
+////			points = new Waypoint[3];
+////			setPoints(points,0,0,0,0);
+////			setPoints(points,0,88,30,1);
+////			setPoints(points,-37,168,90,2);
+////			runPathFinder(points, 3,31); //73
+////			grip.setDropper(true);
+////			robotDrive.ArcadeDrive(-0.25,0);
+////			frc::Wait(0.3);
+////			robotDrive.ArcadeDrive(0,0);
+////			grip.setHolder(false);
+////		}
+//
+//		if(gameData[0] == 'R' && gameData[1] =='L' && startingPos == 0)
+//		{
+////			delete points;
+////			grip.setDropper(false);
+////			grip.setHolder(true);
+////			points = new Waypoint[3];
+////			setPoints(points,0,0,0,0);
+////			setPoints(points,10,180,0,1);
+////			setPoints(points,-21,240,90,2);
+////			runPathFinder(points, 3,73); //73
+////			grip.setDropper(true);
+////			grip.setHolder(false);
+//			robotDrive.DriveStraightDistance(-0.75, 120);
+//		}
+//		if(gameData[0] == 'L' && gameData[1] =='R' && startingPos == 2)
+//		{
+////			delete points;
+////			grip.setDropper(false);
+////			grip.setHolder(true);
+////			points = new Waypoint[3];
+////			setPoints(points,0,0,0,0);
+////			setPoints(points,-10,180,0,1);
+////			setPoints(points,21,240,-90,2);
+////			runPathFinder(points, 3,73); //73
+////			grip.setDropper(true);
+////			grip.setHolder(false);
+//			robotDrive.DriveStraightDistance(-0.75, 120);
+//		}
+//		if (startingPos == 3)
+//		{
+//			delete points;
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-20,40,0,1);
+//			runPathFinder(points, 2,73); //73
+//			delete points;
+//			points = new Waypoint[2];
+//			setPoints(points,0,0,0,0);
+//			setPoints(points,-40,40,90,1);
+//			runPathFinder(points, 2,73); //73
+//		}
 
 
 

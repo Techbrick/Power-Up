@@ -13,7 +13,7 @@
 PIDLoop::PIDLoop() //:
 	//filter()
 {
-  k_p_Angle = .01;
+  k_p_Angle = .02;
   k_i_Angle = .001;
   k_d_Angle = .001;
   p_Angle = 0;
@@ -24,7 +24,7 @@ PIDLoop::PIDLoop() //:
   last_angle_error = 0;
   angleMaxError = 2;
   iteration_time = .005;
-  minTurnSpeed = .3; //TODO: change when actual speed found
+  minTurnSpeed = .35; //TODO: change when actual speed found
   maxTurnSpeed = .8; //TODO: change when actual speed found
 }
 

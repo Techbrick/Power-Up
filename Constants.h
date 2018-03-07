@@ -31,12 +31,12 @@ namespace Constants
 	static constexpr float driveStraightPValue = 0.0025;
 	static constexpr float startRampDownFactor = 72.0;
 
-	static constexpr bool liftInverted = false;
-	static constexpr bool helpInverted = false;
-	static constexpr int liftUpButton = 7;
-	static constexpr int liftUpAxis = 3;
-	static constexpr int liftDownButton = 8;
-	static constexpr int liftDownAxis = 4;
+	static constexpr bool liftInverted = true;
+	static constexpr bool helpInverted = true;
+	static constexpr int liftUpButton = 8;
+	static constexpr int liftUpAxis = 4;
+	static constexpr int liftDownButton = 7;
+	static constexpr int liftDownAxis = 3;
 	static constexpr bool liftEncoderInverted = true;
 	static constexpr float lifterMaxCurrent = 20.0;
 	static constexpr float lifterHeightPerRev = 7.85398163*3*2;
@@ -61,7 +61,7 @@ namespace Constants
 
 	static constexpr float distanceBetweenWheelsMeters = 0.70485;
 	static constexpr float maxVelocity = 1.5;
-	static constexpr float actualMaxVelocity = 3.0;
+	static constexpr float actualMaxVelocity = 3.0*2.7;
 	static constexpr float maxAcceleration = 3.0;
 	static constexpr float maxJerk = 20.0;
 	static constexpr float powerPerVelocity = 2.3 * 0.5 / 3.35;

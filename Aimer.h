@@ -1,22 +1,27 @@
-#include "WPILib.h"
-#include "math.h"
-#include <vector>
-#include <memory>
-#include "Constants.h"
-
-#ifndef SRC_AIMER_H
-#define SRC_AIMER_H
-
-#define PI 3.14159265
-
-class Aimer
-{
-public:
-	Aimer();
-
-	std::shared_ptr<NetworkTable> table;
-
-	float GetHorizontalAngles();
-};
-
-#endif
+///*
+// * DriveTrain.h
+// *
+// *  Created on: Jan 13, 2018
+// *      Author: Joseph Mattson
+// */
+//#include "networktables/NetworkTable.h"
+//#include <math.h>
+//
+//#ifndef SRC_AIMER_H_
+//#define SRC_AIMER_H_
+//
+//
+//class Aimer
+//{
+//
+//public:
+//	Aimer(NetworkTable aTab, float DistanceBetweenCameras);
+//	float getAverageAngle();
+//	float getDistance();
+//private:
+//	NetworkTable table;
+//	float distanceBetweenCameras;
+//};
+//
+//
+//#endif /* SRC_AIMER_H_ */
