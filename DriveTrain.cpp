@@ -42,6 +42,9 @@ DriveTrain::DriveTrain(int lf, int rf, int lr, int rrr, AHRS& g, PIDLoop p):
 
 	fl.SetSelectedSensorPosition(0,0,0);
 	fr.SetSelectedSensorPosition(0,0,0);
+
+	fl.ConfigOpenloopRamp(0.25,0);
+	fr.ConfigOpenloopRamp(0.25,0);
 }
 
 void DriveTrain::TankDrive(float left, float right)

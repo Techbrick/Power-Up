@@ -72,13 +72,15 @@ namespace Constants
 	static constexpr int shifterChannel2 = 7;
 
 	static constexpr int shifterButton = 5;
-	static constexpr int dropperButton = 1;
-	static constexpr int holderButton = 3;
+	static constexpr int dropperButton = 3;
+	static constexpr int holderButton = 2;
 	static constexpr int intakeButton = 2;
-	static constexpr int shootyButton = 4;
+	static constexpr int shootyButton = 3;
 
 	static constexpr bool leftGripperInverted = true;
 	static constexpr bool rightGripperInverted = false;
+
+	static constexpr float distanceBetweenCameras = 15.0;
 
 //	static constexpr int frontLeftDriveChannel = 12;
 //	static constexpr int rearLeftDriveChannel = 13;

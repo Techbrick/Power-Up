@@ -11,7 +11,7 @@ Robot::Robot() :
 		lift(Constants::liftChannel,Constants::helpChannel),
 		climber(Constants::climbChannel1,Constants::climbChannel2),
 		grip(Constants::gripperLeftMotorChannel,Constants::gripperRightMotorChannel,Constants::gripperLeftPneum1Channel,Constants::gripperLeftPneum2Channel,Constants::gripperRightPneum1Channel,Constants::gripperRightPneum2Channel),
-//		aim(),
+		aim(Constants::distanceBetweenCameras),
 		i2c(I2C::kOnboard,Constants::ledAddress),
 		shifter(Constants::shifterChannel1,Constants::shifterChannel2),
 		upLim(8),
@@ -38,6 +38,7 @@ void Robot::RobotInit()
 	{
 		colorSend(1);
 	}
+	CameraServer::GetInstance()->StartAutomaticCapture();
 }
 
 void Robot::OperatorControl()
@@ -76,6 +77,8 @@ void Robot::OperatorControl()
 
 	float cube_ang = 0.0;
 
+	int drivePowHeight = 1;
+
 	lift.Reset();
 	lift.Zero();
 
@@ -94,6 +97,9 @@ void Robot::OperatorControl()
 //			Constants::percentDrivePower = (Constants::normPower/3) * (Constants::lifterMaxHeight - (Constants::lifterHeightPerRev * lift.GetEncoder() / 4096)) / Constants::lifterMaxHeight + 2*(Constants::normPower/3);
 //		}
 
+//		drivePowHeight = (160000.0 - lift.GetEncoder())/(160000.0*1.5)+0.33333;
+//		drivePowHeight = drivePowHeight > 1 ? 1 : drivePowHeight;
+
 		//////////////////////////////////////////////////////////////////////////////
 		//								DRIVING CODE								//
 		//////////////////////////////////////////////////////////////////////////////
@@ -110,7 +116,7 @@ void Robot::OperatorControl()
 		{ //turn to angle 0, 90, 180, 270
 			float left = pid.PIDAngle(angle, driveStick.GetPOV()); //call pid loop
 			float right = -1*left;
-			robotDrive.TankDrive(left,right);
+			robotDrive.TankDrive(left*drivePowHeight,right*drivePowHeight);
 			SmartDashboard::PutNumber("POV", driveStick.GetPOV());
 		}
 		else
@@ -125,12 +131,12 @@ void Robot::OperatorControl()
 				float right = Constants::percentDrivePower*driveStick.GetRawAxis(Constants::tankDriveRightAxis);
 				if (driveStick.GetRawButton(Constants::driveStraightButton))
 				{
-					robotDrive.DriveStraight(left,right);
+					robotDrive.DriveStraight(left*drivePowHeight,right*drivePowHeight);
 					SmartDashboard::PutBoolean("Driving Straight", true);
 				}
 				else
 				{
-					robotDrive.TankDrive(left,right);
+					robotDrive.TankDrive(left*drivePowHeight,right*drivePowHeight);
 					robotDrive.DriveStraightReset();
 					SmartDashboard::PutBoolean("Driving Straight", false);
 				}
@@ -143,12 +149,12 @@ void Robot::OperatorControl()
 				float turn = fabs(driveStick.GetRawAxis(Constants::arcadeDriveTurnAxis)) > 0.05 ? -1 * Constants::percentDrivePower*driveStick.GetRawAxis(Constants::arcadeDriveTurnAxis) : 0.0;
 				if (driveStick.GetRawButton(Constants::driveStraightButton))
 				{
-					robotDrive.DriveStraightArcade(fwd);
+					robotDrive.DriveStraightArcade(fwd*drivePowHeight);
 					SmartDashboard::PutBoolean("Driving Straight", true);
 				}
 				else
 				{
-					robotDrive.ArcadeDrive(fwd,turn);
+					robotDrive.ArcadeDrive(fwd*drivePowHeight,turn*drivePowHeight);
 					robotDrive.DriveStraightReset();
 					SmartDashboard::PutBoolean("Driving Straight", false);
 				}
@@ -157,7 +163,7 @@ void Robot::OperatorControl()
 			{
 				float up = -1*Constants::percentDrivePower*driveStick.GetRawAxis(Constants::fieldOrientedDriveVerticalAxis);
 				float right = Constants::percentDrivePower*driveStick.GetRawAxis(Constants::fieldOrientedDriveHorizontalAxis);
-				robotDrive.FieldOrientedDrive(up,right);
+				robotDrive.FieldOrientedDrive(up*drivePowHeight,right*drivePowHeight);
 			}
 		}
 
@@ -189,16 +195,19 @@ void Robot::OperatorControl()
 //				lift.SetPosition(120);
 //			}
 
-			if (driveStick.GetRawButton(Constants::liftUpButton) || operatorStick.GetPOV() == 0)
+			if (driveStick.GetRawButton(Constants::liftUpButton))
 			{
-				if(operatorStick.GetPOV() == 0)
 				colorSend(5);
-				lift.Lift(((driveStick.GetRawAxis(Constants::liftUpAxis) + operatorStick.GetPOV() == 0 ? 1 : 0)/2.0 + 0.5));
+				lift.Lift(((driveStick.GetRawAxis(Constants::liftUpAxis))/2.0 + 0.5));
+				SmartDashboard::PutString("lifting", "up");
+				SmartDashboard::PutNumber("liftpow",(driveStick.GetRawAxis(Constants::liftUpAxis))/2.0 + 0.5);
 			}
-			else if (driveStick.GetRawButton(Constants::liftDownButton) || operatorStick.GetPOV() == 180)
+			else if (driveStick.GetRawButton(Constants::liftDownButton))
 			{
 				colorSend(7);
-				lift.Lift(-1*((driveStick.GetRawAxis(Constants::liftDownAxis) + operatorStick.GetPOV() == 180 ? 1 : 0)/2.0 + 0.5));
+				lift.Lift(-1*((driveStick.GetRawAxis(Constants::liftDownAxis))/2.0 + 0.5));
+				SmartDashboard::PutString("lifting", "down");
+				SmartDashboard::PutNumber("liftpow",-1*((driveStick.GetRawAxis(Constants::liftDownAxis))/2.0 + 0.5));
 			}
 //			else if (driveStick.GetRawButton(4))
 //			{
@@ -222,16 +231,17 @@ void Robot::OperatorControl()
 			{
 				lift.Brake();
 				firstLifterPosition = true;
+				SmartDashboard::PutString("lifting", "brake");
 			}
 
-			if(lift.GetEncoder() <= -100)
-			{
-				lift.Lift(-0.2);
-			}
-			else if (lift.GetEncoder() >= 14800)
-			{
-				lift.Lift(+0.1);
-			}
+//			if(lift.GetEncoder() <= -100)
+//			{
+//				lift.Lift(-0.2);
+//			}
+//			else if (lift.GetEncoder() >= 14800)
+//			{
+//				lift.Lift(+0.1);
+//			}
 //			lift.Position();
 //		}
 //		else if (upLim.Get())
@@ -294,7 +304,7 @@ void Robot::OperatorControl()
 		else
 			togglingDriveMode = false;
 
-		if (driveStick.GetRawButton(Constants::dropperButton) || operatorStick.GetRawButton(4))
+		if (operatorStick.GetRawButton(Constants::dropperButton))
 		{
 			if (!togglingDropper)
 			{
@@ -308,7 +318,7 @@ void Robot::OperatorControl()
 		else
 			togglingDropper = false;
 
-		if (driveStick.GetRawButton(Constants::holderButton) || operatorStick.GetRawButton(1))
+		if (operatorStick.GetRawButton(Constants::holderButton))
 		{
 			if (!togglingHolder)
 			{
@@ -322,41 +332,23 @@ void Robot::OperatorControl()
 		else
 			togglingHolder = false;
 
-		if (driveStick.GetRawButton(Constants::intakeButton) || operatorStick.GetRawButton(2))
+		if (operatorStick.GetRawAxis(Constants::intakeButton)!=0)
 		{
-			if (!togglingIntake)
-			{
-				if (shootyPower == 0)
-				{
-					grip.setMotors(1);
-					shootyPower = 1;
-				}
-				else
-				{
-					grip.setMotors(0);
-					shootyPower = 0;
-				}
-			}
+			grip.setMotors(operatorStick.GetRawAxis(Constants::intakeButton));
+			grip.setHolder(true);
 			togglingIntake = true;
+		}
+		else if (togglingIntake == true)
+		{
+			togglingIntake = false;
+			grip.setHolder(false);
 		}
 		else
 			togglingIntake = false;
 
-		if (driveStick.GetRawButton(Constants::shootyButton) || operatorStick.GetRawButton(3))
+		if (operatorStick.GetRawAxis(Constants::shootyButton)!=0)
 		{
-			if (!togglingShooty)
-			{
-				if (shootyPower == 0)
-				{
-					grip.setMotors(-1);
-					shootyPower = -1;
-				}
-				else
-				{
-					grip.setMotors(0);
-					shootyPower = 0;
-				}
-			}
+			grip.setMotors(-1*operatorStick.GetRawAxis(Constants::shootyButton));
 			togglingShooty = true;
 		}
 		else
@@ -552,6 +544,7 @@ void Robot::Autonomous()
 	target = SmartDashboard::GetNumber("Target (0Sw 1Sc 2eSw)", target);
 	justGoStraight = SmartDashboard::GetBoolean("Just Go Straight", justGoStraight);
 	robotDrive.DriveStraightReset();
+	shifter.set(false);
 
 //	if(gameData[0] == 'L' && startingPos == 0)
 //	{

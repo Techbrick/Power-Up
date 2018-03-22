@@ -49,6 +49,12 @@ SuperLifter::SuperLifter(int liftChannel, int helpChannel):
 
 	lift.ConfigPeakOutputReverse(-0.4,0);
 	help.ConfigPeakOutputReverse(-0.4,0);
+
+//	lift.ConfigForwardSoftLimitThreshold(16000, 10);
+//	lift.ConfigReverseSoftLimitThreshold(-100, 10);
+	lift.ConfigForwardSoftLimitEnable(false, 0);
+	lift.ConfigReverseSoftLimitEnable(false, 0);
+	lift.OverrideLimitSwitchesEnable(false);
 }
 
 void SuperLifter::Lift(float pow)

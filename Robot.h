@@ -33,7 +33,7 @@ private:
 	SuperLifter lift;
 	SuperClimber climber;
 	Gripper grip;
-//	Aimer aim;
+	Aimer aim;
 	I2C i2c;
 	Pneumatics shifter;
 	DigitalInput upLim, downLim, rIR, lIR;
